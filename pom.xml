@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.4</version> <!-- Versión estable más reciente -->
+        <version>3.2.4</version>
     </parent>
 
     <groupId>org.bugbusters</groupId>
@@ -23,7 +23,6 @@
     </properties>
 
     <dependencies>
-        <!-- Spring Boot Starters -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -64,7 +63,6 @@
 
     <build>
         <plugins>
-            <!-- Plugin para empaquetar como JAR ejecutable -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -78,7 +76,6 @@
                 </configuration>
             </plugin>
 
-            <!-- Compilador para Java 21 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
