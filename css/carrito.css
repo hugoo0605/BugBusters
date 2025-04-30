@@ -1,0 +1,87 @@
+*{ 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+}
+
+body { 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    background: rgb(255, 255, 255);
+    background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzT_l-QGIHIopaXCS84cp_E-emqOQcKI2H2w&s);
+    background-blend-mode:difference;
+    background-size:470px;
+    background-repeat:repeat;
+    color: #333; 
+}
+header { 
+    background: linear-gradient(#173350,65%,black); 
+    color: white; 
+    padding: 16px 20px; 
+    margin-bottom: 24px; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.85);
+    min-width: 400px;
+    width: 100%; 
+}
+
+.nombre-restaurante { 
+    font-size: 20px; 
+    font-weight: bold; 
+}
+
+.numero-mesa { 
+    font-size: 16px; 
+    font-weight: 600; 
+    background-color: #6076cb; 
+    padding: 6px 12px; 
+    border-radius: 8px;
+}
+
+.footer{
+    background: linear-gradient(#173350,65%,black); 
+    color: white; 
+    padding: 16px 20px; 
+    margin-bottom: 24px; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.85);
+    min-width: 400px;
+    position: fixed;
+    height: 50px;
+    width: 100%;
+    bottom: 0;
+}
+
+
+.menu{
+    margin-left: 0px; 
+}
+
+.icono{
+    width: 35px;
+    height: 35px;
+    margin-top: 3px;
+}
+
+@media (min-width: 768px) { 
+    .nombre-restaurante { 
+        font-size: 24px; 
+    }
+
+    .numero-mesa { 
+        font-size: 18px; 
+    }
+}
+
+@media(max-width:300px){
+    .footer{
+        justify-content: left;
+        gap: 37px;
+    }
+    .icono{
+        margin-left: 0px;
+    }
+}

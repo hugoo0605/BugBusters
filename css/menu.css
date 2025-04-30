@@ -1,0 +1,192 @@
+*{ 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+}
+
+body { 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    background: rgb(255, 255, 255);
+    background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzT_l-QGIHIopaXCS84cp_E-emqOQcKI2H2w&s);
+    background-blend-mode:difference;
+    background-size:470px;
+    background-repeat:repeat;
+    color: #333; 
+}
+header { 
+    background: linear-gradient(#173350,65%,black); 
+    color: white; 
+    padding: 16px 20px; 
+    margin-bottom: 18px; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.85);
+    min-width: 400px;
+    width: 100%; 
+}
+
+.nombre-restaurante { 
+    font-size: 20px; 
+    font-weight: bold; 
+}
+
+.numero-mesa { 
+    font-size: 16px; 
+    font-weight: 600; 
+    background-color: #6076cb; 
+    padding: 6px 12px; 
+    border-radius: 8px;
+}
+
+.contenedor-menu { 
+    display: grid; 
+    grid-template-columns: repeat(2,1fr);
+    gap:3px;
+    padding: 5px;
+    margin-bottom: 18px;
+    padding-bottom: 60px;
+}
+
+.plato{ 
+    background: linear-gradient(rgb(74, 87, 130), 50%, rgb(14, 5, 74)); 
+    padding: 10px; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: space-between;
+    min-width: 193px;
+    /*#00f0ff*/
+    box-shadow: 0 0 1.5px #ffffff,
+                0 0 3.5px #ffffff,
+                0 0 7px #ffffff,
+                0 0 8px #00f0ff;
+}
+
+.info-plato { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 8px; 
+}
+
+.texto-plato { 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    flex: 1; 
+}
+
+.nombre-plato { 
+    font-size: 16px; 
+    font-weight: 600; 
+    color: #ffffff; 
+}
+
+.precio { 
+    font-size: 14px; 
+    font-weight: bold; 
+    color: #00c8ff; 
+    margin-top: 4px; 
+}
+
+.imagen-plato { 
+    width: 60px; 
+    height: 60px; 
+    object-fit: cover; 
+    border-radius: 8px; 
+    margin-left: 12px; 
+}
+
+.control-cantidad { 
+    display: flex; 
+    justify-content: 
+    space-between; 
+    align-items: center; 
+    border-top: 1px solid #ddd; 
+    padding-top: 8px; 
+    margin-top: auto; 
+}
+
+.btn-menos, .btn-mas { 
+    background-color: #ffffff; 
+    border: none; 
+    color: rgb(0, 0, 0); 
+    padding: 6px 12px; 
+    font-size: 18px; 
+    font-weight: bold; 
+    border-radius: 6px; 
+    cursor: pointer; 
+    transition: background-color 0.2s ease; 
+}
+
+.btn-menos:hover, .btn-mas:hover { 
+    background-color: #2980b9; 
+}
+
+.contador { 
+    font-size: 16px; 
+    font-weight: 600; 
+    color: #ffffff; 
+    padding: 0 12px; 
+}
+
+.footer{
+    background: linear-gradient(#173350,65%,black); 
+    color: white; 
+    padding: 16px 20px;  
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.85);
+    min-width: 400px;
+    position: fixed;
+    height: 60px;
+    width: 100%;
+    bottom: 0;
+}
+
+
+.menu{
+    margin-left: 0px; 
+}
+
+.icono{
+    width: 35px;
+    height: 35px;
+    margin-top: 3px;
+}
+
+@media (min-width: 768px) { 
+    .nombre-restaurante { 
+        font-size: 24px; 
+    }
+
+    .numero-mesa { 
+        font-size: 18px; 
+    }
+
+    .contenedor-menu { 
+        grid-template-columns: repeat(2, 1fr); 
+    }
+
+    .imagen-plato { 
+        height: 80px; 
+        width: 80px; 
+    } 
+}
+
+@media(max-width:300px){
+    .contenedor-menu{
+        grid-template-columns: 1fr;
+    }
+    .plato{
+        min-width: 200px;
+    }
+    .footer{
+        justify-content: left;
+        gap: 37px;
+    }
+    .icono{
+        margin-left: 0px;
+    }
+}
