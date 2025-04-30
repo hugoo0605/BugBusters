@@ -42,7 +42,7 @@ header {
 .footer{
     background: linear-gradient(#173350,65%,black); 
     color: white; 
-    padding: 16px 20px; 
+    padding: 16px 50px; 
     margin-bottom: 24px; 
     display: flex; 
     justify-content: space-between; 
@@ -60,7 +60,22 @@ header {
     margin-left: 0px; 
 }
 
-.icono{
+.icono1{
+    width: 40px;
+    height: 40px;
+    margin-top: 3px;
+    border-style: solid;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    border-color: aquamarine;
+}
+.icono2{
+    width: 35px;
+    height: 35px;
+    margin-top: 3px;
+}
+.icono3{
     width: 35px;
     height: 35px;
     margin-top: 3px;
@@ -78,8 +93,9 @@ header {
 
 @media(max-width:300px){
     .footer{
+        padding: 16px 40px;
         justify-content: left;
-        gap: 37px;
+        gap: 10px;
     }
     .icono{
         margin-left: 0px;
