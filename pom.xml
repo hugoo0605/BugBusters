@@ -11,9 +11,9 @@
     </parent>
 
     <groupId>org.bugbusters</groupId>
-    <artifactId>BugBusters-Backend</artifactId>
+    <artifactId>BugBusters</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>BugBusters-Backend</name>
+    <name>BugBusters</name>
     <description>Backend para sistema de gestión de bares</description>
 
     <properties>
@@ -58,6 +58,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
     </dependencies>
 

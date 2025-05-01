@@ -1,34 +1,56 @@
 package org.bugbusters.controller;
 
 import org.bugbusters.entity.Producto;
-import org.bugbusters.service.ProductoService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.bugbusters.repository.ProductoRepository;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/productos")
 public class ProductoController {
 
-    private final ProductoService productoService;
+    private final ProductoRepository productoRepository;
 
-    @Autowired
-    public ProductoController(ProductoService productoService) {
-        this.productoService = productoService;
+    public ProductoController(ProductoRepository productoRepository) {
+        this.productoRepository = productoRepository;
     }
 
-    // Ruta para obtener todos los productos disponibles
-    @GetMapping("/api/productos")
-    public List<Producto> obtenerProductosDisponibles() {
-        return productoService.obtenerProductosDisponibles();
+    // Obtener todos los productos disponibles
+    @GetMapping
+    public List<Producto> listarProductos() {
+        return productoRepository.findAll();
     }
 
-    // Ruta para obtener un producto por su ID
-    @GetMapping("/api/productos/{id}")
-    public Producto obtenerProductoPorId(@PathVariable Long id) {
-        return productoService.obtenerProductoPorId(id);
+    // Obtener un producto por su id
+    @GetMapping("/{id}")
+    public Producto obtenerProducto(@PathVariable Long id) {
+        return productoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+    }
+
+    // Crear un nuevo producto
+    @PostMapping
+    public Producto crearProducto(@RequestBody Producto producto) {
+        return productoRepository.save(producto);
+    }
+
+    // Actualizar un producto existente
+    @PutMapping("/{id}")
+    public Producto actualizarProducto(@PathVariable Long id, @RequestBody Producto producto) {
+        Producto productoExistente = productoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+        productoExistente.setNombre(producto.getNombre());
+        productoExistente.setDescripcion(producto.getDescripcion());
+        productoExistente.setPrecio(producto.getPrecio());
+        productoExistente.setCategoria(producto.getCategoria());
+        return productoRepository.save(productoExistente);
+    }
+
+    // Eliminar un producto
+    @DeleteMapping("/{id}")
+    public void eliminarProducto(@PathVariable Long id) {
+        productoRepository.deleteById(id);
     }
 }
 
