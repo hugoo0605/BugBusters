@@ -2,50 +2,68 @@ package org.bugbusters.controller;
 
 import org.bugbusters.entity.Mesa;
 import org.bugbusters.entity.SesionMesa;
-import org.bugbusters.service.SesionMesaService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.bugbusters.repository.MesaRepository;
+import org.bugbusters.repository.SesionMesaRepository;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/sesiones")
 public class SesionMesaController {
 
-    @Autowired
-    private SesionMesaService sesionMesaService; // Servicio que maneja la lógica de negocio
+    private final SesionMesaRepository sesionMesaRepository;
+    private final MesaRepository mesaRepository;
 
-    // Endpoint para crear una nueva sesión de mesa
-    @PostMapping("/crear")
-    public ResponseEntity<SesionMesa> crearSesionMesa(@RequestBody Mesa mesa) {
-        SesionMesa sesionMesa = sesionMesaService.crearSesionMesa(mesa);
-        if (sesionMesa != null) {
-            return ResponseEntity.status(HttpStatus.CREATED).body(sesionMesa);
-        } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+    public SesionMesaController(SesionMesaRepository sesionMesaRepository, MesaRepository mesaRepository) {
+        this.sesionMesaRepository = sesionMesaRepository;
+        this.mesaRepository = mesaRepository;
     }
 
-    // Endpoint para obtener una sesión de mesa existente
-    @GetMapping("/{idSesion}")
-    public ResponseEntity<SesionMesa> obtenerSesionMesa(@PathVariable String idSesion) {
-        SesionMesa sesionMesa = sesionMesaService.obtenerSesionMesa(idSesion);
-        if (sesionMesa != null) {
-            return ResponseEntity.ok(sesionMesa);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    // Crear una nueva sesión para una mesa
+    @PostMapping
+    public SesionMesa crearSesion(@RequestParam Long mesaId) {
+        Optional<Mesa> mesaOpt = mesaRepository.findById(mesaId);
+        if (!mesaOpt.isPresent()) {
+            throw new RuntimeException("Mesa no encontrada");
         }
+
+        SesionMesa sesion = new SesionMesa();
+        sesion.setMesa(mesaOpt.get());
+        sesion.setFechaApertura(LocalDateTime.now());
+        sesion.setTokenAcceso(UUID.randomUUID().toString());
+
+        return sesionMesaRepository.save(sesion);
     }
 
-    // Endpoint para cerrar la sesión de mesa
-    @PostMapping("/cerrar/{idSesion}")
-    public ResponseEntity<Void> cerrarSesionMesa(@PathVariable String idSesion) {
-        boolean cerrado = sesionMesaService.cerrarSesionMesa(idSesion);
-        if (cerrado) {
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+    // Cerrar una sesión
+    @PutMapping("/{id}/cerrar")
+    public SesionMesa cerrarSesion(@PathVariable UUID id) {
+        SesionMesa sesion = sesionMesaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Sesión no encontrada"));
+        sesion.setFechaCierre(LocalDateTime.now());
+        return sesionMesaRepository.save(sesion);
+    }
+
+    // Obtener sesiones activas (sin fecha de cierre)
+    @GetMapping("/activas")
+    public List<SesionMesa> obtenerSesionesActivas() {
+        return sesionMesaRepository.findByFechaCierreIsNull();
+    }
+
+    // Obtener sesión por token de acceso
+    @GetMapping("/token/{token}")
+    public SesionMesa obtenerSesionPorToken(@PathVariable String token) {
+        return sesionMesaRepository.findByTokenAcceso(token)
+                .orElseThrow(() -> new RuntimeException("Sesión no encontrada por token"));
+    }
+
+    // (Opcional) Obtener sesiones por mesa
+    @GetMapping("/mesa/{mesaId}")
+    public List<SesionMesa> obtenerSesionesPorMesa(@PathVariable Long mesaId) {
+        return sesionMesaRepository.findByMesaId(mesaId);
     }
 }
-

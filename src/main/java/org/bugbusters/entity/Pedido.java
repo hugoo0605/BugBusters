@@ -2,6 +2,7 @@ package org.bugbusters.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "pedidos")
@@ -23,6 +24,9 @@ public class Pedido {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sesion_id", nullable = false)
     private SesionMesa sesionMesa;
+
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
+    private List<ItemPedido> items;
 
     public Pedido() {
     }
