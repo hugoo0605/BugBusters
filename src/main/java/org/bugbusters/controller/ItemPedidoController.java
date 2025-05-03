@@ -32,10 +32,10 @@ public class ItemPedidoController {
         Optional<Pedido> pedidoOpt = pedidoRepository.findById(itemPedidoDTO.getPedidoId());
         Optional<Producto> productoOpt = productoRepository.findById(itemPedidoDTO.getProductoId());
 
-        if (!pedidoOpt.isPresent()) {
+        if (pedidoOpt.isEmpty()) {
             throw new RuntimeException("Pedido no encontrado");
         }
-        if (!productoOpt.isPresent()) {
+        if (productoOpt.isEmpty()) {
             throw new RuntimeException("Producto no encontrado");
         }
 

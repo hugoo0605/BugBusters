@@ -27,7 +27,7 @@ public class SesionMesaController {
     @PostMapping
     public SesionMesa crearSesion(@RequestParam Long mesaId) {
         Optional<Mesa> mesaOpt = mesaRepository.findById(mesaId);
-        if (!mesaOpt.isPresent()) {
+        if (mesaOpt.isEmpty()) {
             throw new RuntimeException("Mesa no encontrada");
         }
 

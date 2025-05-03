@@ -35,13 +35,13 @@ public class PedidoController {
     public Pedido crearPedido(@RequestBody PedidoDTO pedidoDTO) {
         // Obtener la sesión correspondiente al UUID
         Optional<SesionMesa> sesionMesaOpt = sesionMesaRepository.findById(pedidoDTO.getSesionId());
-        if (!sesionMesaOpt.isPresent()) {
+        if (sesionMesaOpt.isEmpty()) {
             throw new RuntimeException("Sesion no encontrada");
         }
 
         // Obtener el trabajador correspondiente
         Optional<Trabajador> trabajadorOpt = trabajadorRepository.findById(pedidoDTO.getTrabajadorId());
-        if (!trabajadorOpt.isPresent()) {
+        if (trabajadorOpt.isEmpty()) {
             throw new RuntimeException("Trabajador no encontrado");
         }
 

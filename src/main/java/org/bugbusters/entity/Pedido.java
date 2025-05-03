@@ -1,6 +1,9 @@
 package org.bugbusters.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -8,86 +11,49 @@ import java.util.List;
 @Table(name = "pedidos")
 public class Pedido {
 
+    // Getters y setters
+    @Setter
+    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
+    @Getter
     private String estado;
+    @Setter
+    @Getter
     private LocalDateTime fechaCreacion;
+    @Setter
+    @Getter
     private String notas;
+    @Setter
+    @Getter
     private double total;
 
+    @Setter
+    @Getter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trabajador_id", nullable = false)
     private Trabajador trabajador;
 
+    @Setter
+    @Getter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sesion_id", nullable = false)
     private SesionMesa sesionMesa;
 
+    @Setter
+    @Getter
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     private List<ItemPedido> items;
 
+    @Setter
+    @Getter
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
+    private List<Factura> facturas;
+
+
     public Pedido() {
-    }
-
-    public Pedido(Pedido pedido) {
-    }
-
-    // Getters y setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
-
-    public LocalDateTime getFechaCreacion() {
-        return fechaCreacion;
-    }
-
-    public void setFechaCreacion(LocalDateTime fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
-    }
-
-    public String getNotas() {
-        return notas;
-    }
-
-    public void setNotas(String notas) {
-        this.notas = notas;
-    }
-
-    public double getTotal() {
-        return total;
-    }
-
-    public void setTotal(double total) {
-        this.total = total;
-    }
-
-    public Trabajador getTrabajador() {
-        return trabajador;
-    }
-
-    public void setTrabajador(Trabajador trabajador) {
-        this.trabajador = trabajador;
-    }
-
-    public SesionMesa getSesionMesa() {
-        return sesionMesa;
-    }
-
-    public void setSesionMesa(SesionMesa sesionMesa) {
-        this.sesionMesa = sesionMesa;
     }
 }
