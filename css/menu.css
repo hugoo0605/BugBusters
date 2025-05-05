@@ -39,10 +39,26 @@ header {
     border-radius: 8px;
 }
 
+
+.contenedor-categorias{
+    display: flex; 
+    justify-content: space-between; 
+    padding: 8px;
+    background: linear-gradient(rgb(74, 87, 130), 50%, rgb(14, 5, 74));
+    width: 100%;
+    min-width: 400px;
+    margin-bottom: 15px;
+}
+
+.categoria{
+    color: #ffffff;
+    font-weight: 600;
+}
+
 .contenedor-menu { 
     display: grid; 
     grid-template-columns: repeat(2,1fr);
-    gap:3px;
+    gap:6px;
     padding: 5px;
     margin-bottom: 18px;
     padding-bottom: 60px;
@@ -77,7 +93,7 @@ header {
 }
 
 .nombre-plato { 
-    font-size: 16px; 
+    font-size: 14px; 
     font-weight: 600; 
     color: #ffffff; 
 }
@@ -99,8 +115,7 @@ header {
 
 .control-cantidad { 
     display: flex; 
-    justify-content: 
-    space-between; 
+    justify-content: space-between; 
     align-items: center; 
     border-top: 1px solid #ddd; 
     padding-top: 8px; 

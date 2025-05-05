@@ -52,7 +52,7 @@ header {
     display: flex; 
     flex-direction: column; 
     justify-content: space-between;
-    min-width: 193px;
+    min-width: 382px;
     /*#00f0ff*/
     box-shadow: 0 0 1.5px #ffffff,
                 0 0 3.5px #ffffff,
@@ -137,7 +137,7 @@ header {
 
 .icono1{
     width: 40px;
-    height: 40px;
+    height: 44px;
     margin-top: 3px;
     border-style: solid;
     border-top: 0;

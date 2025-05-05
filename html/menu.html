@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/menu.css"/>
-    <script src="../script/script.js"></script>
     <title>Document</title>
 </head>
 <body>
@@ -12,93 +11,14 @@
         <div class="nombre-restaurante">Restaurante Buen Sabor</div> 
         <div class="numero-mesa">Mesa 12</div> 
     </header>
+    <div class="contenedor-categorias">
+        <div class="categoria">BEBIDA</div>
+        <div class="categoria">RACION</div>
+        <div class="categoria">BOCADILLO</div>
+    </div>
     <!--Plato (repetir este bloque por cada plato) 
     <button id="añadir" onclick="añadirComida()">Añadir</button>-->
-    <div class="contenedor-menu" id="contenedor">
-        <div class="plato"> 
-            <div class="info-plato"> 
-                <div class="texto-plato"> 
-                    <div class="nombre-plato">Tortilla Española</div> 
-                    <div class="precio">7,50€</div> 
-                </div> 
-                <img class="imagen-plato" src="https://recetasdecocina.elmundo.es/wp-content/uploads/2024/09/tortilla-de-patatas-con-cebolla.jpg" alt="Tortilla Española"> 
-            </div> 
-            <div class="control-cantidad"> 
-                <button class="btn-menos">−</button> 
-                <span class="contador">0</span> 
-                <button class="btn-mas">+</button> 
-            </div> 
-        </div>
-        <div class="plato"> 
-            <div class="info-plato"> 
-                <div class="texto-plato"> 
-                    <div class="nombre-plato">Tortilla Española</div> 
-                    <div class="precio">7,50€</div> 
-                </div> 
-                <img class="imagen-plato" src="https://recetasdecocina.elmundo.es/wp-content/uploads/2024/09/tortilla-de-patatas-con-cebolla.jpg" alt="Tortilla Española"> 
-            </div> 
-            <div class="control-cantidad"> 
-                <button class="btn-menos">−</button> 
-                <span class="contador">0</span> 
-                <button class="btn-mas">+</button> 
-            </div> 
-        </div>
-        <div class="plato" > 
-            <div class="info-plato"> 
-                <div class="texto-plato"> 
-                    <div class="nombre-plato">Tortilla Española</div> 
-                    <div class="precio">7,50€</div> 
-                </div> 
-                <img class="imagen-plato" src="https://recetasdecocina.elmundo.es/wp-content/uploads/2024/09/tortilla-de-patatas-con-cebolla.jpg" alt="Tortilla Española"> 
-            </div> 
-            <div class="control-cantidad"> 
-                <button class="btn-menos">−</button> 
-                <span class="contador">0</span> 
-                <button class="btn-mas">+</button> 
-            </div> 
-        </div>
-        <div class="plato" > 
-            <div class="info-plato"> 
-                <div class="texto-plato"> 
-                    <div class="nombre-plato">Tortilla Española</div> 
-                    <div class="precio">7,50€</div> 
-                </div> 
-                <img class="imagen-plato" src="https://recetasdecocina.elmundo.es/wp-content/uploads/2024/09/tortilla-de-patatas-con-cebolla.jpg" alt="Tortilla Española"> 
-            </div> 
-            <div class="control-cantidad"> 
-                <button class="btn-menos">−</button> 
-                <span class="contador">0</span> 
-                <button class="btn-mas">+</button> 
-            </div> 
-        </div>
-        <div class="plato" > 
-            <div class="info-plato"> 
-                <div class="texto-plato"> 
-                    <div class="nombre-plato">Tortilla Española</div> 
-                    <div class="precio">7,50€</div> 
-                </div> 
-                <img class="imagen-plato" src="https://recetasdecocina.elmundo.es/wp-content/uploads/2024/09/tortilla-de-patatas-con-cebolla.jpg" alt="Tortilla Española"> 
-            </div> 
-            <div class="control-cantidad"> 
-                <button class="btn-menos">−</button> 
-                <span class="contador">0</span> 
-                <button class="btn-mas">+</button> 
-            </div> 
-        </div>
-        <div class="plato" > 
-            <div class="info-plato"> 
-                <div class="texto-plato"> 
-                    <div class="nombre-plato">Tortilla Española</div> 
-                    <div class="precio">7,50€</div> 
-                </div> 
-                <img class="imagen-plato" src="https://recetasdecocina.elmundo.es/wp-content/uploads/2024/09/tortilla-de-patatas-con-cebolla.jpg" alt="Tortilla Española"> 
-            </div> 
-            <div class="control-cantidad"> 
-                <button class="btn-menos">−</button> 
-                <span class="contador">0</span> 
-                <button class="btn-mas">+</button> 
-            </div> 
-        </div>
+    <div class="contenedor-menu" id="contenedor-menu">
     </div>
     <div class="footer">
         <div class="menu">
@@ -111,6 +31,7 @@
             <a href="carrito.html"><img class="icono3" src="../media/carro-de-la-compra.png"></a>                 
         </div>
     </div>  
+    <script src="../script/menu.js"></script>
 </body>
 </html>
 
