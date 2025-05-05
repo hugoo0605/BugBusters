@@ -32,5 +32,9 @@ public class Producto {
     @Setter
     @Column(name = "tiempo_preparacion")
     private Integer tiempoPreparacion;
+    @Getter
+    @Setter
+    @Column(name = "imagen_url")
+    private String imagenes;
     // Getters y setters generados por Lombok (@Data)
 }

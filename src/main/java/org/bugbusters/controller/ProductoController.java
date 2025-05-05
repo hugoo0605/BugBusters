@@ -47,6 +47,7 @@ public class ProductoController {
             existente.setCategoria(producto.getCategoria());
             existente.setDisponible(producto.getDisponible());
             existente.setTiempoPreparacion(producto.getTiempoPreparacion());
+            existente.setImagenes(producto.getImagenes());
             return ResponseEntity.ok(productoRepository.save(existente));
         }).orElse(ResponseEntity.notFound().build());
     }
