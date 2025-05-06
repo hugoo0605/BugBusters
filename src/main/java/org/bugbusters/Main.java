@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
 @EnableJpaRepositories(basePackages = "org.bugbusters.repository")
-@EntityScan(basePackages = "org.bugbusters.model")
+@EntityScan(basePackages = "org.bugbusters.entity")
 public class Main {
     public static void main(String[] args) {
         System.out.println("Iniciando programa...");
