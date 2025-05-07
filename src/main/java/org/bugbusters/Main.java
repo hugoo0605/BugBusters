@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 
 @SpringBootApplication
-@EnableJpaRepositories(basePackages = "org.bugbusters.repository")
 public class Main {
     public static void main(String[] args) {
         System.out.println("Iniciando programa...");
