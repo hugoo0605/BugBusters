@@ -1,4 +1,4 @@
-package org.bugbusters.entity;
+package org.bugbusters.enums;
 
 public enum EstadoFactura {
     PAGADA,

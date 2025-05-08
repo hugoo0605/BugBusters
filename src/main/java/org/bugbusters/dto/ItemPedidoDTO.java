@@ -6,7 +6,6 @@ import lombok.Setter;
 @Setter
 @Getter
 public class ItemPedidoDTO {
-
     // Getters y setters
     private int cantidad;
     private double precioUnitario;
@@ -25,4 +24,6 @@ public class ItemPedidoDTO {
         this.productoId = productoId;
     }
 
+    // Constructor sin argumentos
+    public ItemPedidoDTO() {}
 }
