@@ -9,6 +9,7 @@ import org.bugbusters.repository.PedidoRepository;
 import org.bugbusters.repository.ProductoRepository;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -51,4 +52,24 @@ public class ItemPedidoController {
         // Guardar y devolver el itemPedido
         return itemPedidoRepository.save(itemPedido);
     }
+
+    @GetMapping("/pedido/{pedidoId}")
+    public List<ItemPedido> listarItemsPorPedido(@PathVariable Long pedidoId) {
+        return itemPedidoRepository.findByPedidoId(pedidoId);
+    }
+
+    @PatchMapping("/{id}/estado")
+    public ItemPedido actualizarEstado(@PathVariable Long id, @RequestBody String nuevoEstado) {
+        ItemPedido item = itemPedidoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("ItemPedido no encontrado"));
+        item.setEstado(nuevoEstado);
+        return itemPedidoRepository.save(item);
+    }
+
+    @DeleteMapping("/{id}")
+    public void eliminarItemPedido(@PathVariable Long id) {
+        itemPedidoRepository.deleteById(id);
+    }
+
+
 }
