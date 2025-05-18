@@ -77,4 +77,8 @@ public class ProductoController {
         return productoRepository.findByCategoriaAndDisponibleTrue("ESPECIAL");
     }
 
+    @GetMapping("/categorias")
+    public List<String> obtenerCategorias() {
+        return productoRepository.findDistinctCategorias();
+    }
 }
