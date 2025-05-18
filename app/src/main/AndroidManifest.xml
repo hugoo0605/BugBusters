@@ -19,9 +19,12 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activities.MainActivity" />
-        <activity android:name=".activities.PedidosActivity" />
-
+<!--        <activity android:name=".activities.MainActivity" />-->
+<!--        <activity android:name=".activities.PedidosActivity" />-->
+        <activity android:name=".activities.MenuInicial" />
+        <activity android:name=".activities.PedidosActivosActivity" />
+        <activity android:name=".activities.GenerarQRActivity" />
+        <activity android:name=".activities.GenerarCuentaActivity" />
     </application>
 
 </manifest>
