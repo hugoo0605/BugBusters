@@ -24,7 +24,7 @@ class GenerarQRActivity : AppCompatActivity() {
         generateButton.setOnClickListener {
             val mesaId = inputText.text.toString().trim()
             if (mesaId.isNotEmpty()) {
-                val urlPersonalizada = "https://bugbusters.com/mesa/$mesaId"
+                val urlPersonalizada = "https://bugbusters-0jjv.onrender.com/"
                 val bitmap = generateQR(urlPersonalizada)
                 qrImageView.setImageBitmap(bitmap)
             }

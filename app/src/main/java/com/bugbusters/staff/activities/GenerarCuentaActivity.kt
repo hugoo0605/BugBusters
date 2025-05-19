@@ -1,5 +1,6 @@
 package com.bugbusters.staff.activities
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -41,13 +42,14 @@ class GenerarCuentaActivity : AppCompatActivity() {
 
     private fun generarFactura(pedidoId: Long) {
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.1.100:8080/api/")
+            .baseUrl("https://bugbustersspring.onrender.com/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
         val api = retrofit.create(FacturaApi::class.java)
 
         api.generarFactura(pedidoId).enqueue(object : Callback<FacturaDTO> {
+            @SuppressLint("SetTextI18n")
             override fun onResponse(call: Call<FacturaDTO>, response: Response<FacturaDTO>) {
                 if (response.isSuccessful) {
                     val factura = response.body()
@@ -57,11 +59,11 @@ class GenerarCuentaActivity : AppCompatActivity() {
                         Total: ${factura?.total}€
                         Estado: ${factura?.estado}
                     """.trimIndent()
-                } else {
+                }
+                else {
                     facturaResultado.text = "Error al generar factura: ${response.code()}"
                 }
             }
-
             override fun onFailure(call: Call<FacturaDTO>, t: Throwable) {
                 facturaResultado.text = "Error: ${t.message}"
             }

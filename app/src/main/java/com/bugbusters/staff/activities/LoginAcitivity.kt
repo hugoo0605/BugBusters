@@ -26,7 +26,7 @@ class LoginActivity : AppCompatActivity() {
 
         // Configurar Retrofit
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:8080/api/")
+            .baseUrl("https://bugbustersspring.onrender.com/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 

@@ -1,5 +1,6 @@
 package com.bugbusters.staff.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
@@ -28,7 +29,7 @@ class PedidosActivosActivity : AppCompatActivity() {
 
         // Configurar Retrofit
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://dpg-d0ctusidbo4c73frinng-a.frankfurt-postgres.render.com/api/")
+            .baseUrl("https://bugbustersspring.onrender.com/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -51,6 +52,13 @@ class PedidosActivosActivity : AppCompatActivity() {
                         pedidos.map { "Mesa ${it.mesa} - Total: ${it.total}€ - Estado: ${it.estado}" }
                     )
                     listView.adapter = adapter
+                    listView.setOnItemClickListener { _, _, position, _ ->
+                        val pedidoSeleccionado = pedidos[position]
+                        val intent = Intent(this@PedidosActivosActivity, DetallePedidoActivity::class.java)
+                        intent.putExtra("pedido_id", pedidoSeleccionado.id)
+                        startActivity(intent)
+                    }
+
                 } else {
                     Toast.makeText(
                         this@PedidosActivosActivity,
