@@ -10,7 +10,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**") // Aplica a todos los endpoints
-                .allowedOrigins("http://127.0.0.1:5500", "http://localhost:5500","https://bugbusters-kc3r.onrender.com","http://10.0.2.2:8080")
+                .allowedOrigins("*")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*");
     }
