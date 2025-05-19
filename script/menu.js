@@ -31,7 +31,7 @@ const modalDescription = document.getElementById('modal-description');
 const closeBtn = document.getElementById('close-modal');
     
 document.addEventListener("DOMContentLoaded", () => {
-    fetch("http://localhost:8080/api/productos")
+    fetch("http://192.168.112.95:8080/api/productos")
     .then(res => res.json())
     .then(productos => {
         const contenedor = document.getElementById("contenedor-menu");
