@@ -31,7 +31,7 @@ const modalDescription = document.getElementById('modal-description');
 const closeBtn = document.getElementById('close-modal');
     
 document.addEventListener("DOMContentLoaded", () => {
-    fetch("http://192.168.112.95:8080/api/productos")
+    fetch("https://bugbustersspring.onrender.com/api/productos")
     .then(res => res.json())
     .then(productos => {
         const contenedor = document.getElementById("contenedor-menu");
@@ -101,7 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
     .catch(error => console.error("Error al cargar productos:", error));
 });
 
-fetch("http://localhost:8080/api/productos/categorias")
+fetch("https://bugbustersspring.onrender.com/api/productos/categorias")
   .then(res => res.json())
   .then(categorias => {
     const contenedor = document.querySelector(".contenedor-categorias");
