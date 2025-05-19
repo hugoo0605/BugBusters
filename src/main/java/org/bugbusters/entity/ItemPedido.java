@@ -23,7 +23,7 @@ public class ItemPedido {
     @JoinColumn(name = "pedido_id")
     private Pedido pedido;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "producto_id")
     private Producto producto;
 

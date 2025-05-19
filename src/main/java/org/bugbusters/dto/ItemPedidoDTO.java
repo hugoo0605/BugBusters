@@ -2,19 +2,19 @@ package org.bugbusters.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.bugbusters.entity.ItemPedido;
 
 @Setter
 @Getter
 public class ItemPedidoDTO {
-    // Getters y setters
     private int cantidad;
     private double precioUnitario;
     private String estado;
     private String notas;
     private Long pedidoId;
     private Long productoId;
+    private String nombreProducto;
 
-    // Constructor
     public ItemPedidoDTO(int cantidad, double precioUnitario, String estado, String notas, Long pedidoId, Long productoId) {
         this.cantidad = cantidad;
         this.precioUnitario = precioUnitario;
@@ -24,6 +24,13 @@ public class ItemPedidoDTO {
         this.productoId = productoId;
     }
 
-    // Constructor sin argumentos
-    public ItemPedidoDTO() {}
+    public ItemPedidoDTO(ItemPedido itemPedido) {
+        this.cantidad = itemPedido.getCantidad();
+        this.precioUnitario = itemPedido.getPrecioUnitario();
+        this.estado = itemPedido.getEstado();
+        this.notas = itemPedido.getNotas();
+        this.pedidoId = itemPedido.getPedido().getId();
+        this.productoId = itemPedido.getProducto().getId();
+        this.nombreProducto = itemPedido.getProducto() != null ? itemPedido.getProducto().getNombre() : "Producto desconocido";
+    }
 }

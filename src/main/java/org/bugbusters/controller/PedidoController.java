@@ -1,5 +1,6 @@
 package org.bugbusters.controller;
 
+import org.bugbusters.dto.ItemPedidoDTO;
 import org.bugbusters.dto.PedidoDTO;
 import org.bugbusters.dto.PedidoResponseDTO;
 import org.bugbusters.entity.Pedido;
@@ -67,13 +68,6 @@ public class PedidoController {
                 .collect(Collectors.toList());
     }
 
-
-    // Obtener pedidos por estado
-    @GetMapping("/estado/{estado}")
-    public List<Pedido> listarPedidosPorEstado(@PathVariable String estado) {
-        return pedidoRepository.findByEstado(estado);
-    }
-
     // Actualizar estado de un pedido
     @PutMapping("/{id}")
     public Pedido actualizarEstadoPedido(@PathVariable Long id, @RequestParam String estado) {
@@ -82,4 +76,33 @@ public class PedidoController {
         pedidoExistente.setEstado(estado);
         return pedidoRepository.save(pedidoExistente);
     }
+
+    // Obtener pedidos por estado
+    @GetMapping("/estado/{estado}")
+    public List<PedidoResponseDTO> listarPedidosPorEstado(@PathVariable String estado) {
+        return pedidoRepository.findByEstado(estado)
+                .stream()
+                .map(PedidoResponseDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    // Obtener pedidos activos (PENDIENTE, PREPARACION, LISTO)
+    @GetMapping("/activos")
+    public List<PedidoResponseDTO> obtenerPedidosActivos() {
+        return pedidoRepository.findByEstadoIn(List.of("PENDIENTE", "PREPARACION", "LISTO"))
+                .stream()
+                .map(PedidoResponseDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/{id}/items")
+    public List<ItemPedidoDTO> obtenerItemsDePedido(@PathVariable Long id) {
+        Pedido pedido = pedidoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Pedido no encontrado"));
+
+        return pedido.getItems().stream()
+                .map(ItemPedidoDTO::new)
+                .collect(Collectors.toList());
+    }
+
 }
