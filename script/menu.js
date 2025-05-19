@@ -23,6 +23,12 @@ function eliminarDelCarrito(producto) {
         localStorage.setItem("carrito", JSON.stringify(carrito));
     }
 }
+
+const modal = document.getElementById('modal');
+const modalImg = document.getElementById('modal-img');
+const modalName = document.getElementById('modal-name');
+const modalDescription = document.getElementById('modal-description');
+const closeBtn = document.getElementById('close-modal');
     
 document.addEventListener("DOMContentLoaded", () => {
     fetch("http://localhost:8080/api/productos")
@@ -69,9 +75,42 @@ document.addEventListener("DOMContentLoaded", () => {
                         eliminarDelCarrito(producto);
                     }
                 });
+
+                divPlato.addEventListener('click',()=>{
+                    modalImg.src = producto.imagenes;
+                    modalImg.alt = producto.nombre;
+                    modalName.textContent = producto.nombre;
+                    modalDescription.textContent = producto.descripcion;
+                    modal.classList.add('active');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+
+                closeBtn.addEventListener('click', () => {
+                    modal.classList.remove('active');
+                });
+
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) {
+                    modal.classList.remove('active');
+                    }
+                });
         
                 contenedor.appendChild(divPlato);
             });
         })
     .catch(error => console.error("Error al cargar productos:", error));
 });
+
+fetch("http://localhost:8080/api/productos/categorias")
+  .then(res => res.json())
+  .then(categorias => {
+    const contenedor = document.querySelector(".contenedor-categorias");
+    contenedor.innerHTML = ""; // Limpiar antes de añadir
+
+    categorias.forEach(categoria => {
+      const div = document.createElement("div");
+      div.classList.add("categoria");
+      div.textContent = categoria;
+      contenedor.appendChild(div);
+    });
+  });
