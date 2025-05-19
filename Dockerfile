@@ -1,9 +1,5 @@
-FROM eclipse-temurin:21-jdk
+FROM openjdk:17-jdk-alpine
 
-WORKDIR /app
+COPY target/BugBusters-1.0-SNAPSHOT.jar app.jar
 
-COPY BugBusters.jar .
-
-EXPOSE 8080
-
-CMD ["java", "-jar", "BugBusters.jar"]
+ENTRYPOINT ["java", "-jar", "/app.jar"]
