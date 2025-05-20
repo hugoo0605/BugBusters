@@ -55,6 +55,10 @@ header {
     font-weight: 600;
 }
 
+.categoria:hover{
+    cursor: pointer;
+}
+
 .contenedor-menu { 
     display: grid; 
     grid-template-columns: repeat(2,1fr);
@@ -223,6 +227,7 @@ header {
   }
   .modal-content img {
     max-width: 100%;
+    max-height: 600px;
     height: auto;
     border-radius: 8px;
     margin-bottom: 15px;
