@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">BugBusters Staff</string>
+
+    <string-array name="estados_array">
+        <item>PENDIENTE</item>
+        <item>PREPARACION</item>
+        <item>LISTO</item>
+        <item>FINALIZADO</item>
+    </string-array>
 </resources>

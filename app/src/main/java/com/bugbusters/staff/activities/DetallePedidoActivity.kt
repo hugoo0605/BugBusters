@@ -2,29 +2,27 @@ package com.bugbusters.staff.activities
 
 import android.os.Bundle
 import android.view.View
-import android.widget.ListView
-import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.bugbusters.staff.R
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.bugbusters.staff.adapters.ItemPedidoAdapter
 import com.bugbusters.staff.api.PedidoApi
+import com.bugbusters.staff.databinding.ActivityDetallePedidoBinding
+import com.bugbusters.staff.dto.EstadoUpdateDTO
 import com.bugbusters.staff.dto.ItemPedidoDTO
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
-import android.widget.ArrayAdapter
 
 class DetallePedidoActivity : AppCompatActivity() {
 
-    private lateinit var listView: ListView
-    private lateinit var progressBar: ProgressBar
+    private lateinit var binding: ActivityDetallePedidoBinding
     private lateinit var api: PedidoApi
+    private lateinit var adapter: ItemPedidoAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_detalle_pedido)
-
-        listView = findViewById(R.id.listaProductosPedido)
-        progressBar = findViewById(R.id.progressBarDetalle)
+        binding = ActivityDetallePedidoBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         val pedidoId = intent.getLongExtra("pedido_id", -1)
 
@@ -35,7 +33,7 @@ class DetallePedidoActivity : AppCompatActivity() {
         }
 
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://bugbustersspring.onrender.com/api/")
+            .baseUrl("http://10.0.2.2:8080/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -45,30 +43,70 @@ class DetallePedidoActivity : AppCompatActivity() {
     }
 
     private fun cargarItemsDelPedido(pedidoId: Long) {
-        progressBar.visibility = View.VISIBLE
+        binding.progressBarDetalle.visibility = View.VISIBLE
 
         api.obtenerItemsDePedido(pedidoId).enqueue(object : Callback<List<ItemPedidoDTO>> {
-            override fun onResponse(call: Call<List<ItemPedidoDTO>>, response: Response<List<ItemPedidoDTO>>) {
-                progressBar.visibility = View.GONE
+            override fun onResponse(
+                call: Call<List<ItemPedidoDTO>>,
+                response: Response<List<ItemPedidoDTO>>
+            ) {
+                binding.progressBarDetalle.visibility = View.GONE
                 if (response.isSuccessful) {
                     val items = response.body().orEmpty()
-                    val adapter = ArrayAdapter(
-                        this@DetallePedidoActivity,
-                        android.R.layout.simple_list_item_1,
-                        items.map {
-                            "${it.cantidad} x ${it.nombreProducto} - ${it.precioUnitario}€ [${it.estado}]"
-                        }
-                    )
-                    listView.adapter = adapter
+
+                    adapter = ItemPedidoAdapter(items)
+                    binding.listaProductosPedido.layoutManager = LinearLayoutManager(this@DetallePedidoActivity)
+                    binding.listaProductosPedido.adapter = adapter
+
+                    setupBotones()
+
                 } else {
                     Toast.makeText(this@DetallePedidoActivity, "Error al cargar productos", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<List<ItemPedidoDTO>>, t: Throwable) {
-                progressBar.visibility = View.GONE
+                binding.progressBarDetalle.visibility = View.GONE
                 Toast.makeText(this@DetallePedidoActivity, "Fallo: ${t.message}", Toast.LENGTH_LONG).show()
             }
         })
+    }
+
+    private fun setupBotones() {
+        binding.btnFinalizarTodos.setOnClickListener {
+            adapter.marcarTodosComoFinalizado()
+        }
+
+        binding.btnCancelar.setOnClickListener {
+            finish()
+        }
+
+        binding.btnAceptar.setOnClickListener {
+            val itemsActualizados = adapter.getItemsActualizados()
+            for (item in itemsActualizados) {
+                api.actualizarEstadoItem(item.id, item.estado)
+                    .enqueue(object : Callback<Void> {
+                        override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                            if (!response.isSuccessful) {
+                                Toast.makeText(
+                                    this@DetallePedidoActivity,
+                                    "Error al actualizar ${item.nombreProducto}",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+
+                        override fun onFailure(call: Call<Void>, t: Throwable) {
+                            Toast.makeText(
+                                this@DetallePedidoActivity,
+                                "Fallo: ${t.message}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    })
+            }
+            Toast.makeText(this, "Cambios aplicados", Toast.LENGTH_SHORT).show()
+        }
+
     }
 }
