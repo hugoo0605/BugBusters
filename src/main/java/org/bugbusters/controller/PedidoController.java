@@ -31,6 +31,14 @@ public class PedidoController {
         this.trabajadorRepository = trabajadorRepository;
     }
 
+    @GetMapping("/activos")
+    public List<PedidoResponseDTO> obtenerPedidosActivos() {
+        return pedidoRepository.findByEstadoIn(List.of("PENDIENTE", "PREPARACION", "LISTO"))
+                .stream()
+                .map(PedidoResponseDTO::new)
+                .collect(Collectors.toList());
+    }
+
     // Crear un nuevo pedido
     @PostMapping
     public Pedido crearPedido(@RequestBody PedidoDTO pedidoDTO) {
@@ -86,15 +94,6 @@ public class PedidoController {
                 .collect(Collectors.toList());
     }
 
-    // Obtener pedidos activos (PENDIENTE, PREPARACION, LISTO)
-    @GetMapping("/activos")
-    public List<PedidoResponseDTO> obtenerPedidosActivos() {
-        return pedidoRepository.findByEstadoIn(List.of("PENDIENTE", "PREPARACION", "LISTO"))
-                .stream()
-                .map(PedidoResponseDTO::new)
-                .collect(Collectors.toList());
-    }
-
     @GetMapping("/{id}/items")
     public List<ItemPedidoDTO> obtenerItemsDePedido(@PathVariable Long id) {
         Pedido pedido = pedidoRepository.findById(id)
@@ -103,6 +102,13 @@ public class PedidoController {
         return pedido.getItems().stream()
                 .map(ItemPedidoDTO::new)
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping("/{id}")
+    public PedidoResponseDTO obtenerPedidoPorId(@PathVariable Long id) {
+        Pedido pedido = pedidoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Pedido no encontrado"));
+        return new PedidoResponseDTO(pedido);
     }
 
 }
