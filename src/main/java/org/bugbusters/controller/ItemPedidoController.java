@@ -1,5 +1,6 @@
 package org.bugbusters.controller;
 
+import org.bugbusters.dto.EstadoUpdateDTO;
 import org.bugbusters.dto.ItemPedidoDTO;
 import org.bugbusters.entity.ItemPedido;
 import org.bugbusters.entity.Pedido;
@@ -59,10 +60,10 @@ public class ItemPedidoController {
     }
 
     @PatchMapping("/{id}/estado")
-    public ItemPedido actualizarEstado(@PathVariable Long id, @RequestBody String nuevoEstado) {
+    public ItemPedido actualizarEstado(@PathVariable Long id, @RequestBody EstadoUpdateDTO dto) {
         ItemPedido item = itemPedidoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("ItemPedido no encontrado"));
-        item.setEstado(nuevoEstado);
+        item.setEstado(dto.getEstado());
         return itemPedidoRepository.save(item);
     }
 
