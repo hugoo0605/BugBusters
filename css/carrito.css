@@ -136,6 +136,28 @@ header {
     margin-left: 0px; 
 }
 
+.control-cantidad{
+    border-top: 1px solid #ddd;
+    display: flex;
+    margin-top: 10px;
+    padding: 2px;
+    gap: 5px;
+    justify-content: space-between; 
+}
+
+.btn-menos, .btn-mas {
+    margin-top: 5px; 
+    background-color: #ffffff; 
+    border: none; 
+    color: rgb(0, 0, 0); 
+    padding: 5px 10px; 
+    font-size: 18px; 
+    font-weight: bold; 
+    border-radius: 6px; 
+    cursor: pointer; 
+    transition: background-color 0.2s ease; 
+}
+
 .icono1{
     width: 40px;
     height: 40px;
