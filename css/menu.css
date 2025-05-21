@@ -181,7 +181,7 @@ header {
     border-top: 0;
     border-left: 0;
     border-right: 0;
-    border-color: aquamarine;
+    border-color: #7fffd4;
 }
 .icono2{
     width: 35px;
@@ -193,7 +193,20 @@ header {
     height: 35px;
     margin-top: 3px;
 }
-  .modal-overlay {
+
+.contador-carrito {
+    position: absolute;
+    top: 5px;
+    right: 3%;
+    background: #2ed9a0;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 7px;
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+.modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -207,12 +220,12 @@ header {
     visibility: hidden;
     opacity: 0;
     transition: opacity 0.3s ease;
-  }
-  .modal-overlay.active {
+}
+.modal-overlay.active {
     visibility: visible;
     opacity: 1;
-  }
-  .modal-content {
+}
+.modal-content {
     background: linear-gradient(rgb(74, 87, 130), 50%, rgb(14, 5, 74));
     border-radius: 10px;
     padding: 20px;
@@ -224,26 +237,26 @@ header {
                 0 0 7px #ffffff,
                 0 0 8px #00f0ff;
     position: relative;
-  }
-  .modal-content img {
+}
+.modal-content img {
     max-width: 100%;
     max-height: 600px;
     height: auto;
     border-radius: 8px;
     margin-bottom: 15px;
     box-shadow: 0 6px 15px rgb(0 0 139 / 0.4);
-  }
-  .modal-content h2 {
+}
+.modal-content h2 {
     margin: 10px 0 6px;
     color: #ffffff;
     font-size: 1.8rem;
-  }
-  .modal-content p {
+}
+.modal-content p {
     font-size: 1rem;
     color: #d4d4d4;
     margin-bottom: 20px;
-  }
-  .close-btn {
+}
+.close-btn {
     background-color: #0030a3;
     color: white;
     border: none;
@@ -252,10 +265,10 @@ header {
     cursor: pointer;
     font-size: 1rem;
     transition: background-color 0.2s ease;
-  }
-  .close-btn:hover {
+}
+.close-btn:hover {
     background-color: #001c66;
-  }
+}
 
 @media (min-width: 768px) { 
     .nombre-restaurante { 

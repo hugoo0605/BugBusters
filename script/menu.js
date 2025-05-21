@@ -6,6 +6,15 @@ function guardarCarrito(carrito) {
   localStorage.setItem("carrito", JSON.stringify(carrito));
 }
 
+function actualizarContadorCarrito() {
+  const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+  const total = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+  const spanContador = document.getElementById("contador-carrito");
+  if (spanContador) {
+    spanContador.textContent = total;
+  }
+}
+
 function añadirAlCarrito(producto) {
   const carrito = obtenerCarrito();
   const existente = carrito.find(item => item.id === producto.id);
@@ -15,6 +24,7 @@ function añadirAlCarrito(producto) {
     carrito.push({ ...producto, cantidad: 1 });
   }
   guardarCarrito(carrito);
+  actualizarContadorCarrito();
 }
 
 function eliminarDelCarrito(producto) {
@@ -26,6 +36,7 @@ function eliminarDelCarrito(producto) {
       carrito.splice(index, 1);
     }
     guardarCarrito(carrito);
+    actualizarContadorCarrito();
   }
 }
 
@@ -143,6 +154,7 @@ fetch("https://bugbustersspring.onrender.com/api/productos/categorias")
 // Mostrar productos al cargar y al volver desde historial
 document.addEventListener("DOMContentLoaded", () => {
   mostrarProductos("TODOS");
+  actualizarContadorCarrito();
 });
 
 // Si vuelves a esta página desde el historial (botón atrás del navegador)
