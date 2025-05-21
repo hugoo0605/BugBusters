@@ -56,9 +56,13 @@ public class ItemPedidoController {
     }
 
     @GetMapping("/pedido/{pedidoId}")
-    public List<ItemPedido> listarItemsPorPedido(@PathVariable Long pedidoId) {
-        return itemPedidoRepository.findByPedidoId(pedidoId);
+    public List<ItemPedidoDTO> listarItemsPorPedido(@PathVariable Long pedidoId) {
+        return itemPedidoRepository.findByPedidoId(pedidoId)
+                .stream()
+                .map(ItemPedidoDTO::new)
+                .toList();
     }
+
 
     @PatchMapping("/{id}/estado")
     public ItemPedido actualizarEstado(@PathVariable Long id, @RequestBody EstadoUpdateDTO dto) {

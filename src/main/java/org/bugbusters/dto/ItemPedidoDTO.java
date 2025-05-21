@@ -7,6 +7,10 @@ import org.bugbusters.entity.ItemPedido;
 @Setter
 @Getter
 public class ItemPedidoDTO {
+
+    // 🔧 AÑADE ESTE CAMPO:
+    private Long id;
+
     private int cantidad;
     private double precioUnitario;
     private String estado;
@@ -25,6 +29,7 @@ public class ItemPedidoDTO {
     }
 
     public ItemPedidoDTO(ItemPedido itemPedido) {
+        this.id = itemPedido.getId(); // 🔧 IMPORTANTE
         this.cantidad = itemPedido.getCantidad();
         this.precioUnitario = itemPedido.getPrecioUnitario();
         this.estado = itemPedido.getEstado();
