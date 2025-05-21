@@ -54,6 +54,51 @@ function eliminarDelCarrito(producto) {
     actualizarPrecioTotal();
 }
 
+document.getElementById("confirmar-compra").addEventListener("click", () => {
+  const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+
+    if (carrito.length === 0) {
+        alert("No hay productos en el carrito.");
+        return;
+    }
+
+    const pedido = {
+        sesionId: "48b6e9e0-7b87-4ca1-8fff-0b300430b7be", // reemplaza esto con el UUID real de la mesa
+        trabajadorId: 1, // o null si lo haces sin login de trabajadores
+        estado: "pendiente",
+        total: carrito.reduce((sum, item) => sum + item.precio * item.cantidad, 0),
+        notas: "",
+        items: carrito.map(item => ({
+            productoId: item.id,
+            cantidad: item.cantidad,
+            precioUnitario: item.precio,
+            estado: "pendiente",
+            notas: ""
+        }))
+    };
+
+    fetch("https://bugbustersspring.onrender.com/api/pedidos", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(pedido)
+    })
+    .then(res => {
+        if (!res.ok) throw new Error("Error al guardar el pedido");
+        return res.json();
+    })
+    .then(data => {
+        console.log("Pedido guardado:", data);
+        localStorage.removeItem("carrito");
+        window.location.href = "historial.html";
+    })
+    .catch(err => {
+        console.error("Error:", err);
+        alert("Hubo un error al enviar el pedido.");
+    });
+});
+
 
 carrito.forEach(producto => {
   const divPlato = document.createElement("div");
