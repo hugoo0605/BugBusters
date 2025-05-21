@@ -28,31 +28,59 @@ public class ItemPedido {
     private Producto producto;
 
     // Getters y setters
-    public Long getId() { return id; }
+    public Long getId() {
+        return id;
+    }
 
-    public void setId(Long id) { this.id = id; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public int getCantidad() { return cantidad; }
+    public int getCantidad() {
+        return cantidad;
+    }
 
-    public void setCantidad(int cantidad) { this.cantidad = cantidad; }
+    public void setCantidad(int cantidad) {
+        this.cantidad = cantidad;
+    }
 
-    public double getPrecioUnitario() { return precioUnitario; }
+    public double getPrecioUnitario() {
+        return precioUnitario;
+    }
 
-    public void setPrecioUnitario(double precioUnitario) { this.precioUnitario = precioUnitario; }
+    public void setPrecioUnitario(double precioUnitario) {
+        this.precioUnitario = precioUnitario;
+    }
 
-    public String getEstado() { return estado; }
+    public String getEstado() {
+        return estado;
+    }
 
-    public void setEstado(String estado) { this.estado = estado; }
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
 
-    public String getNotas() { return notas; }
+    public String getNotas() {
+        return notas;
+    }
 
-    public void setNotas(String notas) { this.notas = notas; }
+    public void setNotas(String notas) {
+        this.notas = notas;
+    }
 
-    public Pedido getPedido() { return pedido; }
+    public Pedido getPedido() {
+        return pedido;
+    }
 
-    public void setPedido(Pedido pedido) { this.pedido = pedido; }
+    public void setPedido(Pedido pedido) {
+        this.pedido = pedido;
+    }
 
-    public Producto getProducto() { return producto; }
+    public Producto getProducto() {
+        return producto;
+    }
 
-    public void setProducto(Producto producto) { this.producto = producto; }
+    public void setProducto(Producto producto) {
+        this.producto = producto;
+    }
 }

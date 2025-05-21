@@ -1,5 +1,6 @@
 package org.bugbusters.controller;
 
+
 import org.bugbusters.dto.EstadoUpdateDTO;
 import org.bugbusters.dto.ItemPedidoDTO;
 import org.bugbusters.entity.ItemPedido;
@@ -71,6 +72,4 @@ public class ItemPedidoController {
     public void eliminarItemPedido(@PathVariable Long id) {
         itemPedidoRepository.deleteById(id);
     }
-
-
 }

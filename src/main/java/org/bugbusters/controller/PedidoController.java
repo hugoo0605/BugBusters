@@ -3,12 +3,9 @@ package org.bugbusters.controller;
 import org.bugbusters.dto.ItemPedidoDTO;
 import org.bugbusters.dto.PedidoDTO;
 import org.bugbusters.dto.PedidoResponseDTO;
-import org.bugbusters.entity.Pedido;
-import org.bugbusters.entity.SesionMesa;
-import org.bugbusters.entity.Trabajador;
-import org.bugbusters.repository.PedidoRepository;
-import org.bugbusters.repository.SesionMesaRepository;
-import org.bugbusters.repository.TrabajadorRepository;
+import org.bugbusters.entity.*;
+import org.bugbusters.repository.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,13 +19,17 @@ public class PedidoController {
     private final PedidoRepository pedidoRepository;
     private final SesionMesaRepository sesionMesaRepository;
     private final TrabajadorRepository trabajadorRepository;
+    private final ProductoRepository productoRepository;
+    private final ItemPedidoRepository itemPedidoRepository;
 
     public PedidoController(PedidoRepository pedidoRepository,
                             SesionMesaRepository sesionMesaRepository,
-                            TrabajadorRepository trabajadorRepository) {
+                            TrabajadorRepository trabajadorRepository, ProductoRepository productoRepository, ItemPedidoRepository itemPedidoRepository) {
         this.pedidoRepository = pedidoRepository;
         this.sesionMesaRepository = sesionMesaRepository;
         this.trabajadorRepository = trabajadorRepository;
+        this.productoRepository = productoRepository;
+        this.itemPedidoRepository = itemPedidoRepository;
     }
 
     @GetMapping("/activos")
@@ -39,32 +40,54 @@ public class PedidoController {
                 .collect(Collectors.toList());
     }
 
-    // Crear un nuevo pedido
     @PostMapping
-    public Pedido crearPedido(@RequestBody PedidoDTO pedidoDTO) {
-        // Obtener la sesión correspondiente al UUID
-        Optional<SesionMesa> sesionMesaOpt = sesionMesaRepository.findById(pedidoDTO.getSesionId());
-        if (sesionMesaOpt.isEmpty()) {
-            throw new RuntimeException("Sesion no encontrada");
+    public ResponseEntity<String> crearPedido(@RequestBody PedidoDTO pedidoDTO) {
+        try {
+            // Obtener la sesiÃ³n correspondiente al UUID
+            Optional<SesionMesa> sesionMesaOpt = sesionMesaRepository.findById(pedidoDTO.getSesionId());
+            if (sesionMesaOpt.isEmpty()) {
+                throw new RuntimeException("Sesion no encontrada");
+            }
+
+            // Obtener el trabajador correspondiente
+            Optional<Trabajador> trabajadorOpt = trabajadorRepository.findById(pedidoDTO.getTrabajadorId());
+            if (trabajadorOpt.isEmpty()) {
+                throw new RuntimeException("Trabajador no encontrado");
+            }
+
+            // Crear el objeto Pedido y asignar las relaciones
+            Pedido pedido = new Pedido();
+            pedido.setEstado(pedidoDTO.getEstado());
+            pedido.setFechaCreacion(pedidoDTO.getFechaCreacion());
+            pedido.setNotas(pedidoDTO.getNotas());
+            pedido.setTotal(pedidoDTO.getTotal());
+            pedido.setSesionMesa(sesionMesaOpt.get());
+            pedido.setTrabajador(trabajadorOpt.get());
+
+            pedido = pedidoRepository.save(pedido); // ahora tienes el ID del pedido
+
+            // Guardar los items
+            for (ItemPedidoDTO itemDTO : pedidoDTO.getItems()) {
+                Optional<Producto> productoOpt = productoRepository.findById(itemDTO.getProductoId());
+                if (productoOpt.isEmpty()) {
+                    return ResponseEntity.badRequest().body("Producto no encontrado: ID " + itemDTO.getProductoId());
+                }
+
+                ItemPedido item = new ItemPedido();
+                item.setPedido(pedido);
+                item.setProducto(productoOpt.get());
+                item.setCantidad(itemDTO.getCantidad());
+                item.setPrecioUnitario(itemDTO.getPrecioUnitario());
+                item.setEstado("PENDIENTE");
+                item.setNotas(null); // o lo que tengas
+                itemPedidoRepository.save(item);
+            }
+
+            return ResponseEntity.ok("Pedido guardado correctamente");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Error al guardar el pedido: " + e.getMessage());
         }
-
-        // Obtener el trabajador correspondiente
-        Optional<Trabajador> trabajadorOpt = trabajadorRepository.findById(pedidoDTO.getTrabajadorId());
-        if (trabajadorOpt.isEmpty()) {
-            throw new RuntimeException("Trabajador no encontrado");
-        }
-
-        // Crear el objeto Pedido y asignar las relaciones
-        Pedido pedido = new Pedido();
-        pedido.setEstado(pedidoDTO.getEstado());
-        pedido.setFechaCreacion(pedidoDTO.getFechaCreacion());
-        pedido.setNotas(pedidoDTO.getNotas());
-        pedido.setTotal(pedidoDTO.getTotal());
-        pedido.setSesionMesa(sesionMesaOpt.get());
-        pedido.setTrabajador(trabajadorOpt.get());
-
-        // Guardar y devolver el pedido
-        return pedidoRepository.save(pedido);
     }
 
     // Obtener todos los pedidos

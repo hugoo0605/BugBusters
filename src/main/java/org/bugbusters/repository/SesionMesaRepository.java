@@ -9,6 +9,8 @@ import java.util.UUID;
 
 public interface SesionMesaRepository extends JpaRepository<SesionMesa, UUID> {
     List<SesionMesa> findByFechaCierreIsNull();
+
     Optional<SesionMesa> findByTokenAcceso(String token);
+
     List<SesionMesa> findByMesaId(Long mesaId);
 }

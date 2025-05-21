@@ -9,8 +9,11 @@ import java.util.List;
 public interface ProductoRepository extends JpaRepository<Producto, Long> {
     @Query("FROM Producto p ORDER BY p.id ASC")
     List<Producto> findByDisponibleTrue();
+
     List<Producto> findByCategoriaAndDisponibleTrue(String categoria);
+
     List<Producto> findByNombreContainingIgnoreCaseAndDisponibleTrue(String nombre);
+
     @Query("SELECT DISTINCT p.categoria FROM Producto p")
     List<String> findDistinctCategorias();
 }
