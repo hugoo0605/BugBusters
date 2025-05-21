@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.bugbusters.staff.R
 import com.bugbusters.staff.api.AuthApi
 import com.bugbusters.staff.databinding.ActivityLoginBinding
 import com.bugbusters.staff.dto.TrabajadorDTO
@@ -18,6 +19,9 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
     private lateinit var authApi: AuthApi
+    //Boolean para el ojo de la contraseña
+    private var isPasswordVisible = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +30,8 @@ class LoginActivity : AppCompatActivity() {
 
         // Configurar Retrofit
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://bugbustersspring.onrender.com/api/")
+            .baseUrl("http://10.0.2.2:8080/api/")
+            //render: https://bugbustersspring.onrender.com/api/
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -46,6 +51,23 @@ class LoginActivity : AppCompatActivity() {
             }
 
             login(email, password)
+        }
+        // Ojo para mostrar/ocultar contraseña
+        binding.showPasswordIcon.setOnClickListener {
+            if (isPasswordVisible) {
+                // Ocultar contraseña
+                binding.passwordEditText.inputType =
+                    android.text.InputType.TYPE_CLASS_TEXT or android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD
+                binding.showPasswordIcon.setImageResource(R.drawable.ic_eye)
+            } else {
+                // Mostrar contraseña
+                binding.passwordEditText.inputType =
+                    android.text.InputType.TYPE_CLASS_TEXT or android.text.InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                binding.showPasswordIcon.setImageResource(R.drawable.ic_eye_off)
+            }
+            // Mover el cursor al final
+            binding.passwordEditText.setSelection(binding.passwordEditText.text.length)
+            isPasswordVisible = !isPasswordVisible
         }
     }
 

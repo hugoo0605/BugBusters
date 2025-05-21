@@ -29,7 +29,8 @@ class PedidosActivosActivity : AppCompatActivity() {
 
         // Configurar Retrofit
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://bugbustersspring.onrender.com/api/")
+            .baseUrl("http://10.0.2.2:8080/api/")
+            //render:https://bugbustersspring.onrender.com/api/
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
