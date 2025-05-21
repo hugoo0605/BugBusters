@@ -44,6 +44,7 @@ header {
     grid-template-columns: repeat(1,1fr);
     padding: 8px;
     gap: 5px;
+    padding-bottom: 80px;
 }
 
 .plato{ 
