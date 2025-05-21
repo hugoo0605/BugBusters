@@ -1,5 +1,6 @@
 package org.bugbusters.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,50 +10,35 @@ import java.util.List;
 
 @Entity
 @Table(name = "pedidos")
+@Setter
+@Getter
 public class Pedido {
-
-    // Getters y setters
-    @Setter
-    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Setter
-    @Getter
     private String estado;
-    @Setter
-    @Getter
+    @Column(name = "fecha_creacion")
     private LocalDateTime fechaCreacion;
-    @Setter
-    @Getter
     private String notas;
-    @Setter
-    @Getter
     private double total;
 
-    @Setter
-    @Getter
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "trabajador_id", nullable = false)
+    @JoinColumn(name = "trabajador_id")
+    @JsonIgnore
     private Trabajador trabajador;
 
-    @Setter
-    @Getter
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sesion_id", nullable = false)
     private SesionMesa sesionMesa;
 
-    @Setter
-    @Getter
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<ItemPedido> items;
 
-    @Setter
-    @Getter
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Factura> facturas;
-
 
     public Pedido() {
     }

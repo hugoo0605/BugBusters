@@ -1,19 +1,14 @@
 package org.bugbusters.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class EstadoUpdateDTO {
     private String estado;
-
-    // 🔧 Constructor vacío requerido por Jackson
-    public EstadoUpdateDTO() {
-    }
-
-    // 🔧 Constructor útil si lo quieres usar manualmente
-    public EstadoUpdateDTO(String estado) {
-        this.estado = estado;
-    }
 }
