@@ -197,7 +197,6 @@ header {
 .contador-carrito {
     position: absolute;
     top: 5px;
-    right: 3%;
     background: #2ed9a0;
     color: white;
     border-radius: 50%;
@@ -294,14 +293,20 @@ header {
         grid-template-columns: 1fr;
     }
     .plato{
-        min-width: 200px;
+        min-width: 390px;
     }
     .footer{
         padding: 16px 40px;
-        justify-content: left;
+        justify-content: space-between;
         gap: 10px;
     }
     .icono{
         margin-left: 0px;
+    }
+}
+
+@media(max-width:460px){
+    .categoria{
+        font-size: 14px;
     }
 }

@@ -156,6 +156,17 @@ header {
     margin-top: 3px;
 }
 
+.contador-carrito {
+    position: absolute;
+    top: 5px;
+    background: #2ed9a0;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 7px;
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
 @media (min-width: 768px) { 
     .nombre-restaurante { 
         font-size: 24px; 
@@ -169,7 +180,7 @@ header {
 @media(max-width:300px){
     .footer{
         padding: 16px 40px;
-        justify-content: left;
+        justify-content: space-between;
         gap: 10px;
     }
     .icono{
