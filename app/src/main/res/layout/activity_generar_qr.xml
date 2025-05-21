@@ -3,9 +3,9 @@
     android:id="@+id/layout_generar_qr"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     android:orientation="vertical"
-    android:padding="24dp"
-    android:gravity="center">
+    android:padding="24dp">
 
     <EditText
         android:id="@+id/editTextInput"
@@ -17,8 +17,8 @@
         android:id="@+id/btnGenerateQR"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Generar QR"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp"
+        android:text="Generar QR" />
 
     <ImageView
         android:id="@+id/qrImageView"

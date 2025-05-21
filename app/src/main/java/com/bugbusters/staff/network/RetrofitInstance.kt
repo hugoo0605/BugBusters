@@ -1,0 +1,18 @@
+package com.bugbusters.staff.network
+
+import com.bugbusters.staff.api.FacturaApi
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+
+object RetrofitInstance {
+    private val retrofit by lazy {
+        Retrofit.Builder()
+            .baseUrl("http://10.0.2.2:8080/api/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+
+    val facturaApi: FacturaApi by lazy {
+        retrofit.create(FacturaApi::class.java)
+    }
+}

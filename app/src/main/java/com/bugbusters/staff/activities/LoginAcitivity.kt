@@ -7,8 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.bugbusters.staff.R
 import com.bugbusters.staff.api.AuthApi
 import com.bugbusters.staff.databinding.ActivityLoginBinding
-import com.bugbusters.staff.dto.TrabajadorDTO
 import com.bugbusters.staff.dto.LoginRequest
+import com.bugbusters.staff.dto.TrabajadorDTO
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -19,6 +19,7 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
     private lateinit var authApi: AuthApi
+
     //Boolean para el ojo de la contraseña
     private var isPasswordVisible = false
 
@@ -30,8 +31,8 @@ class LoginActivity : AppCompatActivity() {
 
         // Configurar Retrofit
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:8080/api/")
-            //render: https://bugbustersspring.onrender.com/api/
+//            .baseUrl("http://10.0.2.2:8080/api/")
+            .baseUrl("https://bugbustersspring.onrender.com/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -46,7 +47,8 @@ class LoginActivity : AppCompatActivity() {
             val password = binding.passwordEditText.text.toString().trim()
 
             if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Por favor completa todos los campos", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Por favor completa todos los campos", Toast.LENGTH_SHORT)
+                    .show()
                 return@setOnClickListener
             }
 
@@ -79,20 +81,33 @@ class LoginActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     val trabajador = response.body()
                     if (trabajador != null) {
-                        Toast.makeText(this@LoginActivity, "Bienvenido, ${trabajador.nombre}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@LoginActivity,
+                            "Bienvenido, ${trabajador.nombre}",
+                            Toast.LENGTH_SHORT
+                        ).show()
                         val intent = Intent(this@LoginActivity, MenuInicial::class.java)
                         startActivity(intent)
                         finish()
                     } else {
-                        Toast.makeText(this@LoginActivity, "Error inesperado", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@LoginActivity, "Error inesperado", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 } else {
-                    Toast.makeText(this@LoginActivity, "Credenciales incorrectas", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@LoginActivity,
+                        "Credenciales incorrectas",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
 
             override fun onFailure(call: Call<TrabajadorDTO>, t: Throwable) {
-                Toast.makeText(this@LoginActivity, "Error de conexión: ${t.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    this@LoginActivity,
+                    "Error de conexión: ${t.message}",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         })
     }

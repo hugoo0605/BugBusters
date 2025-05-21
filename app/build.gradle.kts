@@ -73,5 +73,5 @@ dependencies {
     implementation(libs.core)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
-    implementation (libs.postgresql)
+    implementation(libs.postgresql)
 }

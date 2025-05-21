@@ -8,9 +8,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bugbusters.staff.adapters.ItemPedidoAdapter
 import com.bugbusters.staff.api.PedidoApi
 import com.bugbusters.staff.databinding.ActivityDetallePedidoBinding
-import com.bugbusters.staff.dto.EstadoUpdateDTO
 import com.bugbusters.staff.dto.ItemPedidoDTO
-import retrofit2.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class DetallePedidoActivity : AppCompatActivity() {
@@ -33,8 +35,8 @@ class DetallePedidoActivity : AppCompatActivity() {
         }
 
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:8080/api/")
-            //render:https://bugbustersspring.onrender.com/api/
+//            .baseUrl("http://10.0.2.2:8080/api/")
+            .baseUrl("https://bugbustersspring.onrender.com/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -56,19 +58,25 @@ class DetallePedidoActivity : AppCompatActivity() {
                     val items = response.body().orEmpty()
 
                     adapter = ItemPedidoAdapter(items)
-                    binding.listaProductosPedido.layoutManager = LinearLayoutManager(this@DetallePedidoActivity)
+                    binding.listaProductosPedido.layoutManager =
+                        LinearLayoutManager(this@DetallePedidoActivity)
                     binding.listaProductosPedido.adapter = adapter
 
                     setupBotones()
 
                 } else {
-                    Toast.makeText(this@DetallePedidoActivity, "Error al cargar productos", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@DetallePedidoActivity,
+                        "Error al cargar productos",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
 
             override fun onFailure(call: Call<List<ItemPedidoDTO>>, t: Throwable) {
                 binding.progressBarDetalle.visibility = View.GONE
-                Toast.makeText(this@DetallePedidoActivity, "Fallo: ${t.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@DetallePedidoActivity, "Fallo: ${t.message}", Toast.LENGTH_LONG)
+                    .show()
             }
         })
     }
@@ -89,14 +97,14 @@ class DetallePedidoActivity : AppCompatActivity() {
                     .enqueue(object : Callback<Void> {
                         override fun onResponse(call: Call<Void>, response: Response<Void>) {
                             if (!response.isSuccessful) {
+                                val errorMsg = response.errorBody()?.string() ?: "Error desconocido"
                                 Toast.makeText(
                                     this@DetallePedidoActivity,
-                                    "Error al actualizar ${item.nombreProducto}",
-                                    Toast.LENGTH_SHORT
+                                    "Error al actualizar ${item.nombreProducto}: ${response.code()} - $errorMsg",
+                                    Toast.LENGTH_LONG
                                 ).show()
                             }
                         }
-
                         override fun onFailure(call: Call<Void>, t: Throwable) {
                             Toast.makeText(
                                 this@DetallePedidoActivity,
@@ -107,7 +115,7 @@ class DetallePedidoActivity : AppCompatActivity() {
                     })
             }
             Toast.makeText(this, "Cambios aplicados", Toast.LENGTH_SHORT).show()
+            finish()
         }
-
     }
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="Theme.BugBustersStaff" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">#24C1B9</item>
         <item name="colorPrimaryVariant">#1E9C96</item>

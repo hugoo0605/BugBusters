@@ -15,10 +15,12 @@ class ItemPedidoAdapter(
 
     private val estados = listOf("PENDIENTE", "PREPARACION", "LISTO", "ENTREGADO")
 
-    inner class ItemViewHolder(val binding: ItemProductoBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class ItemViewHolder(val binding: ItemProductoBinding) :
+        RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
-        val binding = ItemProductoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemProductoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ItemViewHolder(binding)
     }
 
@@ -38,13 +40,19 @@ class ItemPedidoAdapter(
         val index = estados.indexOf(item.estado)
         holder.binding.spinnerEstado.setSelection(if (index >= 0) index else 0)
 
-        holder.binding.spinnerEstado.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
-                item.estado = estados[pos]
-            }
+        holder.binding.spinnerEstado.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View?,
+                    pos: Int,
+                    id: Long
+                ) {
+                    item.estado = estados[pos]
+                }
 
-            override fun onNothingSelected(parent: AdapterView<*>) {}
-        }
+                override fun onNothingSelected(parent: AdapterView<*>) {}
+            }
     }
 
     override fun getItemCount(): Int = items.size

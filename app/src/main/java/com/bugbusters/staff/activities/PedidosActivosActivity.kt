@@ -11,7 +11,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.bugbusters.staff.R
 import com.bugbusters.staff.api.PedidoApi
 import com.bugbusters.staff.dto.PedidoDTO
-import retrofit2.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class PedidosActivosActivity : AppCompatActivity() {
@@ -29,8 +32,8 @@ class PedidosActivosActivity : AppCompatActivity() {
 
         // Configurar Retrofit
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:8080/api/")
-            //render:https://bugbustersspring.onrender.com/api/
+            //.baseUrl("http://10.0.2.2:8080/api/")
+            .baseUrl("https://bugbustersspring.onrender.com/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -43,7 +46,10 @@ class PedidosActivosActivity : AppCompatActivity() {
         progressBar.visibility = View.VISIBLE
 
         api.obtenerPedidosActivos().enqueue(object : Callback<List<PedidoDTO>> {
-            override fun onResponse(call: Call<List<PedidoDTO>>, response: Response<List<PedidoDTO>>) {
+            override fun onResponse(
+                call: Call<List<PedidoDTO>>,
+                response: Response<List<PedidoDTO>>
+            ) {
                 progressBar.visibility = View.GONE
                 if (response.isSuccessful) {
                     val pedidos = response.body().orEmpty()
@@ -55,7 +61,8 @@ class PedidosActivosActivity : AppCompatActivity() {
                     listView.adapter = adapter
                     listView.setOnItemClickListener { _, _, position, _ ->
                         val pedidoSeleccionado = pedidos[position]
-                        val intent = Intent(this@PedidosActivosActivity, DetallePedidoActivity::class.java)
+                        val intent =
+                            Intent(this@PedidosActivosActivity, DetallePedidoActivity::class.java)
                         intent.putExtra("pedido_id", pedidoSeleccionado.id)
                         startActivity(intent)
                     }
@@ -71,7 +78,11 @@ class PedidosActivosActivity : AppCompatActivity() {
 
             override fun onFailure(call: Call<List<PedidoDTO>>, t: Throwable) {
                 progressBar.visibility = View.GONE
-                Toast.makeText(this@PedidosActivosActivity, "Fallo: ${t.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    this@PedidosActivosActivity,
+                    "Fallo: ${t.message}",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         })
     }

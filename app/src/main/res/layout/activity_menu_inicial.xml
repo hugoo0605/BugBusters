@@ -2,27 +2,32 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:background="@drawable/background_gradient"
     android:gravity="center"
-    android:padding="24dp"
-    android:background="@drawable/background_login">
-        <Button
-            android:id="@+id/btnPedidosActivos"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Pedidos Activos"
-            android:layout_marginBottom="16dp" />
+    android:orientation="vertical"
+    android:padding="32dp">
 
-        <Button
-            android:id="@+id/btnGenerarQR"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Generar QR"
-            android:layout_marginBottom="16dp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Menú Principal"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:layout_marginBottom="32dp" />
 
-        <Button
-            android:id="@+id/btnGenerarCuentas"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Generar Cuentas" />
+    <Button
+        android:id="@+id/btnPedidosActivos"
+        style="@style/FancyMenuButton"
+        android:text="Pedidos Activos" />
+
+    <Button
+        android:id="@+id/btnGenerarQR"
+        style="@style/FancyMenuButton"
+        android:text="Generar QR" />
+
+    <Button
+        android:id="@+id/btnGenerarCuentas"
+        style="@style/FancyMenuButton"
+        android:text="Generar Cuentas" />
 </LinearLayout>
