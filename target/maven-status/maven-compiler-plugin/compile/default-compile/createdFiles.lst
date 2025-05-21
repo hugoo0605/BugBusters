@@ -1,7 +1,12 @@
+org\bugbusters\dto\PedidoResponseDTO.class
 org\bugbusters\repository\FacturaRepository.class
 org\bugbusters\service\SesionMesaService.class
+org\bugbusters\entity\ItemPedido.class
 org\bugbusters\enums\EstadoFactura.class
 org\bugbusters\dto\PedidoDTO.class
+org\bugbusters\dto\ItemPedidoDTO.class
+org\bugbusters\controller\PedidoController.class
+org\bugbusters\repository\PedidoRepository.class
 org\bugbusters\service\ProductoService.class
 org\bugbusters\controller\ProductoController.class
 org\bugbusters\entity\ComandaCocina.class
@@ -15,6 +20,7 @@ org\bugbusters\entity\SesionMesa.class
 org\bugbusters\config\CorsConfig.class
 org\bugbusters\config\SecurityConfig.class
 org\bugbusters\repository\SesionMesaRepository.class
+org\bugbusters\config\WebConfig.class
 org\bugbusters\controller\FacturaController.class
 org\bugbusters\repository\TrabajadorRepository.class
 org\bugbusters\service\FacturaService.class
