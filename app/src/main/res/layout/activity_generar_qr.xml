@@ -1,29 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layout_generar_qr"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background_gradient"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="24dp">
+    android:padding="32dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Generar Código QR"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:layout_marginBottom="24dp" />
 
     <EditText
         android:id="@+id/editTextInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Texto para generar QR" />
+        android:hint="Texto para generar QR"
+        android:background="@drawable/edittext_background"
+        android:padding="16dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#CCCCCC"
+        android:layout_marginBottom="24dp" />
 
     <Button
         android:id="@+id/btnGenerateQR"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Generar QR" />
+        style="@style/FancyMenuButton"
+        android:text="Generar QR"
+        android:layout_marginBottom="24dp" />
 
     <ImageView
         android:id="@+id/qrImageView"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:layout_marginTop="24dp"
-        android:contentDescription="Código QR generado" />
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:contentDescription="Código QR generado"
+        android:background="@drawable/imageview_background"
+        android:scaleType="fitCenter" />
 </LinearLayout>
