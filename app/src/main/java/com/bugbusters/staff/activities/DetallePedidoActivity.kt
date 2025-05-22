@@ -129,7 +129,11 @@ class DetallePedidoActivity : AppCompatActivity() {
                     .enqueue(object : Callback<Void> {
                         override fun onResponse(call: Call<Void>, response: Response<Void>) {
                             if (response.isSuccessful) {
-                                Toast.makeText(this@DetallePedidoActivity, "Pedido completado", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    this@DetallePedidoActivity,
+                                    "Pedido completado",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             } else {
                                 val errorMsg = response.errorBody()?.string() ?: "Error desconocido"
                                 Toast.makeText(
@@ -141,7 +145,11 @@ class DetallePedidoActivity : AppCompatActivity() {
                         }
 
                         override fun onFailure(call: Call<Void>, t: Throwable) {
-                            Toast.makeText(this@DetallePedidoActivity, "Fallo: ${t.message}", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                this@DetallePedidoActivity,
+                                "Fallo: ${t.message}",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     })
             } else {

@@ -2,47 +2,47 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
     android:background="@drawable/background_gradient"
+    android:gravity="center"
+    android:orientation="vertical"
     android:padding="24dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
         android:text="Generar Factura"
-        android:textSize="24sp"
-        android:textStyle="bold"
         android:textColor="#FFFFFF"
-        android:layout_marginBottom="24dp" />
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/inputPedidoId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/edittext_background"
         android:hint="ID de la Mesa"
         android:inputType="number"
-        android:background="@drawable/edittext_background"
         android:padding="12dp"
         android:textColor="#999999"
-        android:textColorHint="#999999"
-        android:layout_marginBottom="16dp" />
+        android:textColorHint="#999999" />
 
     <Button
         android:id="@+id/generarFacturaBtn"
+        style="@style/FancyMenuButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Generar Factura"
-        style="@style/FancyMenuButton"
-        android:layout_marginBottom="24dp" />
+        android:layout_marginBottom="24dp"
+        android:text="Generar Factura" />
 
     <TextView
         android:id="@+id/facturaResultado"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Factura:"
-        android:textColor="#FFFFFF"
         android:background="@drawable/factura_box"
         android:padding="16dp"
+        android:text="Factura:"
+        android:textColor="#FFFFFF"
         android:textSize="16sp" />
 </LinearLayout>

@@ -6,8 +6,8 @@
         android:color="#80FFFFFF" /> <!-- Borde blanco semitransparente -->
     <corners android:radius="12dp" />
     <padding
+        android:bottom="12dp"
         android:left="12dp"
-        android:top="12dp"
         android:right="12dp"
-        android:bottom="12dp" />
+        android:top="12dp" />
 </shape>

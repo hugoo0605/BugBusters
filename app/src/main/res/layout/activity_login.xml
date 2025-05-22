@@ -2,9 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
     android:background="@drawable/background_gradient"
+    android:gravity="center"
+    android:orientation="vertical"
     android:padding="32dp">
 
     <!-- Imagen con borde neon -->
@@ -23,52 +23,52 @@
         android:id="@+id/subtitleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:text="BugBusters Staff"
         android:textColor="#FFFFFF"
         android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="8dp" />
+        android:textStyle="bold" />
 
     <!-- Mensaje de ayuda -->
     <TextView
         android:id="@+id/infoText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
         android:text="Introduce tus credenciales para acceder"
         android:textColor="#DDFFFFFF"
-        android:textSize="14sp"
-        android:layout_marginBottom="16dp" />
+        android:textSize="14sp" />
 
     <!-- Contenedor de login -->
     <LinearLayout
         android:id="@+id/loginContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center"
         android:background="@drawable/neon_box"
-        android:padding="24dp"
-        android:elevation="8dp">
+        android:elevation="8dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="24dp">
 
         <!-- Campo Email -->
         <EditText
             android:id="@+id/emailEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
             android:background="@drawable/edit_text_bg"
             android:hint="Email"
             android:inputType="textEmailAddress"
             android:padding="12dp"
             android:textColor="@android:color/white"
-            android:textColorHint="#88FFFFFF"
-            android:layout_marginBottom="12dp" />
+            android:textColorHint="#88FFFFFF" />
 
         <!-- Campo Contraseña + ojo -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/passwordEditText"
@@ -86,18 +86,18 @@
                 android:id="@+id/showPasswordIcon"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:padding="4dp"
-                android:src="@drawable/ic_eye"
                 android:clickable="true"
-                android:focusable="true" />
+                android:focusable="true"
+                android:padding="4dp"
+                android:src="@drawable/ic_eye" />
         </LinearLayout>
 
         <Button
             android:id="@+id/loginButton"
+            style="@style/FancyMenuButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            style="@style/FancyMenuButton"
             android:text="Iniciar sesión" />
     </LinearLayout>
 </LinearLayout>

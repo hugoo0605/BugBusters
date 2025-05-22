@@ -2,16 +2,19 @@ package com.bugbusters.staff.activities
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.pdf.PdfDocument
 import android.os.Bundle
 import android.view.View
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.bugbusters.staff.R
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.WriterException
 import com.google.zxing.qrcode.QRCodeWriter
-import android.graphics.pdf.PdfDocument
-import androidx.core.content.ContextCompat
 import java.io.File
 import java.io.FileOutputStream
 
@@ -61,7 +64,11 @@ class GenerarQRActivity : AppCompatActivity() {
             val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
             for (x in 0 until width) {
                 for (y in 0 until height) {
-                    bitmap.setPixel(x, y, if (bitMatrix[x, y]) android.graphics.Color.BLACK else android.graphics.Color.WHITE)
+                    bitmap.setPixel(
+                        x,
+                        y,
+                        if (bitMatrix[x, y]) android.graphics.Color.BLACK else android.graphics.Color.WHITE
+                    )
                 }
             }
             bitmap
@@ -100,7 +107,12 @@ class GenerarQRActivity : AppCompatActivity() {
         val qrSize = 300
         val qrLeft = (width - qrSize) / 2f
         val qrTop = 120f
-        canvas.drawBitmap(qrBitmap, null, android.graphics.RectF(qrLeft, qrTop, qrLeft + qrSize, qrTop + qrSize), null)
+        canvas.drawBitmap(
+            qrBitmap,
+            null,
+            android.graphics.RectF(qrLeft, qrTop, qrLeft + qrSize, qrTop + qrSize),
+            null
+        )
 
         paint.textSize = 24f
         paint.isFakeBoldText = false
@@ -131,7 +143,6 @@ class GenerarQRActivity : AppCompatActivity() {
             pdfDocument.close()
         }
     }
-
 
 
 }

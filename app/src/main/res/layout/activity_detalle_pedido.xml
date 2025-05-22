@@ -2,9 +2,9 @@
     android:id="@+id/layoutDetalle"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background_gradient"
     android:orientation="vertical"
-    android:padding="12dp"
-    android:background="@drawable/background_gradient">
+    android:padding="12dp">
 
     <ProgressBar
         android:id="@+id/progressBarDetalle"
@@ -21,25 +21,25 @@
 
     <Button
         android:id="@+id/btnFinalizarTodos"
+        style="@style/FancyMenuButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Marcar todos como ENTREGADO"
-        style="@style/FancyMenuButton" />
+        android:text="Marcar todos como ENTREGADO" />
 
     <Button
         android:id="@+id/btnAceptar"
+        style="@style/FancyMenuButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="Aceptar cambios"
-        style="@style/FancyMenuButton" />
+        android:text="Aceptar cambios" />
 
     <Button
         android:id="@+id/btnCancelar"
+        style="@style/FancyMenuButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:layout_marginBottom="8dp"
-        android:text="Cancelar"
-        style="@style/FancyMenuButton" />
+        android:text="Cancelar" />
 </LinearLayout>

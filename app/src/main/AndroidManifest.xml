@@ -24,6 +24,7 @@
         <activity android:name=".activities.GenerarQRActivity" />
         <activity android:name=".activities.GenerarCuentaActivity" />
         <activity android:name=".activities.DetallePedidoActivity" />
+        <activity android:name=".activities.FacturasPendientesActivity" />
     </application>
 
 </manifest>

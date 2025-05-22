@@ -24,6 +24,7 @@ class PedidosActivosActivity : AppCompatActivity() {
     private lateinit var listView: ListView
     private lateinit var progressBar: ProgressBar
     private lateinit var api: PedidoApi
+
     //Refresca la pagina cada x tiempo
     private val refreshHandler = Handler(Looper.getMainLooper())
     private lateinit var refreshRunnable: Runnable
@@ -39,7 +40,7 @@ class PedidosActivosActivity : AppCompatActivity() {
         // Configurar Retrofit
         val retrofit = Retrofit.Builder()
             .baseUrl("http://10.0.2.2:8080/api/")
-        //  .baseUrl("https://bugbustersspring.onrender.com/api/")
+            //  .baseUrl("https://bugbustersspring.onrender.com/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -79,7 +80,8 @@ class PedidosActivosActivity : AppCompatActivity() {
                     listView.adapter = adapter
                     listView.setOnItemClickListener { _, _, position, _ ->
                         val pedidoSeleccionado = pedidos[position]
-                        val intent = Intent(this@PedidosActivosActivity, DetallePedidoActivity::class.java)
+                        val intent =
+                            Intent(this@PedidosActivosActivity, DetallePedidoActivity::class.java)
                         intent.putExtra("pedido_id", pedidoSeleccionado.id)
                         startActivity(intent)
                     }

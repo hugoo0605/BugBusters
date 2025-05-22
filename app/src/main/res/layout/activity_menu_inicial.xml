@@ -10,11 +10,11 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
         android:text="Menú Principal"
-        android:textSize="24sp"
-        android:textStyle="bold"
         android:textColor="#FFFFFF"
-        android:layout_marginBottom="32dp" />
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/btnPedidosActivos"
@@ -30,4 +30,10 @@
         android:id="@+id/btnGenerarCuentas"
         style="@style/FancyMenuButton"
         android:text="Generar Cuentas" />
+
+    <!-- NUEVO: Botón para abrir Facturas Pendientes -->
+    <Button
+        android:id="@+id/btnFacturasPendientes"
+        style="@style/FancyMenuButton"
+        android:text="Facturas Pendientes" />
 </LinearLayout>

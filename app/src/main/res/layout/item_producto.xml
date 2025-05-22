@@ -1,20 +1,19 @@
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     card_view:cardCornerRadius="16dp"
     card_view:cardElevation="4dp"
-    card_view:cardUseCompatPadding="true"
-    card_view:cardPreventCornerOverlap="false">
+    card_view:cardPreventCornerOverlap="false"
+    card_view:cardUseCompatPadding="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/card_background"
         android:orientation="vertical"
-        android:padding="12dp"
-        android:background="@drawable/card_background">
+        android:padding="12dp">
 
         <TextView
             android:id="@+id/tvNombreProducto"
@@ -28,22 +27,22 @@
             android:id="@+id/tvCantidad"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:text="Cantidad" />
+            android:text="Cantidad"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/tvPrecio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:text="Precio" />
+            android:text="Precio"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/tvEstadoActual"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:text="Estado actual" />
+            android:text="Estado actual"
+            android:textSize="16sp" />
 
         <Spinner
             android:id="@+id/spinnerEstado"
