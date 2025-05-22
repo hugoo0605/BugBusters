@@ -6,6 +6,7 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.PATCH
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface PedidoApi {
@@ -20,4 +21,11 @@ interface PedidoApi {
         @Path("id") itemId: Long,
         @Body nuevoEstado: String
     ): Call<Void>
+
+    @PUT("pedidos/{id}")
+    fun actualizarEstadoPedido(
+        @Path("id") pedidoId: Long,
+        @retrofit2.http.Query("estado") estado: String
+    ): Call<Void>
+
 }

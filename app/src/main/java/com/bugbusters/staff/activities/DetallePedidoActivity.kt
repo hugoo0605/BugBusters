@@ -20,13 +20,14 @@ class DetallePedidoActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetallePedidoBinding
     private lateinit var api: PedidoApi
     private lateinit var adapter: ItemPedidoAdapter
+    private var pedidoId: Long = -1L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetallePedidoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val pedidoId = intent.getLongExtra("pedido_id", -1)
+        pedidoId = intent.getLongExtra("pedido_id", -1)
 
         if (pedidoId == -1L) {
             Toast.makeText(this, "Pedido inválido", Toast.LENGTH_SHORT).show()
@@ -92,6 +93,8 @@ class DetallePedidoActivity : AppCompatActivity() {
 
         binding.btnAceptar.setOnClickListener {
             val itemsActualizados = adapter.getItemsActualizados()
+            var entregados = true
+
             for (item in itemsActualizados) {
                 api.actualizarEstadoItem(item.id, item.estado)
                     .enqueue(object : Callback<Void> {
@@ -105,6 +108,7 @@ class DetallePedidoActivity : AppCompatActivity() {
                                 ).show()
                             }
                         }
+
                         override fun onFailure(call: Call<Void>, t: Throwable) {
                             Toast.makeText(
                                 this@DetallePedidoActivity,
@@ -113,8 +117,37 @@ class DetallePedidoActivity : AppCompatActivity() {
                             ).show()
                         }
                     })
+
+                // Si hay algún item no entregado, marcamos como false
+                if (item.estado != "ENTREGADO") {
+                    entregados = false
+                }
             }
-            Toast.makeText(this, "Cambios aplicados", Toast.LENGTH_SHORT).show()
+
+            if (entregados) {
+                api.actualizarEstadoPedido(pedidoId, "ENTREGADO")
+                    .enqueue(object : Callback<Void> {
+                        override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                            if (response.isSuccessful) {
+                                Toast.makeText(this@DetallePedidoActivity, "Pedido completado", Toast.LENGTH_SHORT).show()
+                            } else {
+                                val errorMsg = response.errorBody()?.string() ?: "Error desconocido"
+                                Toast.makeText(
+                                    this@DetallePedidoActivity,
+                                    "Error al actualizar pedido: ${response.code()} - $errorMsg",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        }
+
+                        override fun onFailure(call: Call<Void>, t: Throwable) {
+                            Toast.makeText(this@DetallePedidoActivity, "Fallo: ${t.message}", Toast.LENGTH_SHORT).show()
+                        }
+                    })
+            } else {
+                Toast.makeText(this, "Cambios aplicados", Toast.LENGTH_SHORT).show()
+            }
+
             finish()
         }
     }

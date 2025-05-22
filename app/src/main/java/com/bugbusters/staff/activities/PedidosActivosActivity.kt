@@ -2,6 +2,8 @@ package com.bugbusters.staff.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.ListView
@@ -22,6 +24,10 @@ class PedidosActivosActivity : AppCompatActivity() {
     private lateinit var listView: ListView
     private lateinit var progressBar: ProgressBar
     private lateinit var api: PedidoApi
+    //Refresca la pagina cada x tiempo
+    private val refreshHandler = Handler(Looper.getMainLooper())
+    private lateinit var refreshRunnable: Runnable
+    private val refreshInterval: Long = 5000
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,24 +39,36 @@ class PedidosActivosActivity : AppCompatActivity() {
         // Configurar Retrofit
         val retrofit = Retrofit.Builder()
             .baseUrl("http://10.0.2.2:8080/api/")
-//            .baseUrl("https://bugbustersspring.onrender.com/api/")
+        //  .baseUrl("https://bugbustersspring.onrender.com/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
         api = retrofit.create(PedidoApi::class.java)
 
         cargarPedidosActivos()
+
+        refreshRunnable = Runnable {
+            cargarPedidosActivos()
+            refreshHandler.postDelayed(refreshRunnable, refreshInterval)
+        }
     }
 
+    private var esPrimeraCarga = true
+
     private fun cargarPedidosActivos() {
-        progressBar.visibility = View.VISIBLE
+        if (esPrimeraCarga) {
+            progressBar.visibility = View.VISIBLE
+        }
 
         api.obtenerPedidosActivos().enqueue(object : Callback<List<PedidoDTO>> {
             override fun onResponse(
                 call: Call<List<PedidoDTO>>,
                 response: Response<List<PedidoDTO>>
             ) {
-                progressBar.visibility = View.GONE
+                if (esPrimeraCarga) {
+                    progressBar.visibility = View.GONE
+                    esPrimeraCarga = false
+                }
                 if (response.isSuccessful) {
                     val pedidos = response.body().orEmpty()
                     val adapter = ArrayAdapter(
@@ -61,12 +79,10 @@ class PedidosActivosActivity : AppCompatActivity() {
                     listView.adapter = adapter
                     listView.setOnItemClickListener { _, _, position, _ ->
                         val pedidoSeleccionado = pedidos[position]
-                        val intent =
-                            Intent(this@PedidosActivosActivity, DetallePedidoActivity::class.java)
+                        val intent = Intent(this@PedidosActivosActivity, DetallePedidoActivity::class.java)
                         intent.putExtra("pedido_id", pedidoSeleccionado.id)
                         startActivity(intent)
                     }
-
                 } else {
                     Toast.makeText(
                         this@PedidosActivosActivity,
@@ -77,7 +93,10 @@ class PedidosActivosActivity : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<List<PedidoDTO>>, t: Throwable) {
-                progressBar.visibility = View.GONE
+                if (esPrimeraCarga) {
+                    progressBar.visibility = View.GONE
+                    esPrimeraCarga = false
+                }
                 Toast.makeText(
                     this@PedidosActivosActivity,
                     "Fallo: ${t.message}",
@@ -85,5 +104,24 @@ class PedidosActivosActivity : AppCompatActivity() {
                 ).show()
             }
         })
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+        // Inicia el refresco automático cuando se muestra la pantalla
+        refreshHandler.postDelayed(refreshRunnable, refreshInterval)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        // Detiene el refresco automático cuando se oculta la pantalla
+        refreshHandler.removeCallbacks(refreshRunnable)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Por seguridad, quitamos cualquier callback pendiente al destruir
+        refreshHandler.removeCallbacks(refreshRunnable)
     }
 }
