@@ -1,69 +1,56 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_login">
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@drawable/background_gradient"
+    android:padding="32dp">
 
-    <!-- Imagen centrada arriba con borde neon -->
+    <!-- Imagen con borde neon -->
     <ImageView
         android:id="@+id/loginLogo"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="24dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/neon_square"
         android:contentDescription="Logo del bar"
         android:padding="8dp"
         android:src="@drawable/logo_bar" />
 
-    <!-- Subtítulo debajo de la imagen -->
+    <!-- Título -->
     <TextView
         android:id="@+id/subtitleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/loginLogo"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="8dp"
-        android:shadowColor="#24C1B9"
-        android:shadowDx="0"
-        android:shadowDy="0"
-        android:shadowRadius="6"
         android:text="BugBusters Staff"
-        android:textColor="#000000"
+        android:textColor="#FFFFFF"
         android:textSize="24sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp" />
 
     <!-- Mensaje de ayuda -->
     <TextView
         android:id="@+id/infoText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/subtitleText"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="4dp"
-        android:shadowColor="#24C1B9"
-        android:shadowDx="0"
-        android:shadowDy="0"
-        android:shadowRadius="4"
         android:text="Introduce tus credenciales para acceder"
-        android:textColor="#000000"
-        android:textSize="14sp" />
+        android:textColor="#DDFFFFFF"
+        android:textSize="14sp"
+        android:layout_marginBottom="16dp" />
 
-    <!-- Caja de login -->
+    <!-- Contenedor de login -->
     <LinearLayout
         android:id="@+id/loginContainer"
-        android:layout_width="320dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/infoText"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/neon_box"
-        android:elevation="12dp"
-        android:gravity="center"
         android:orientation="vertical"
-        android:padding="24dp">
+        android:gravity="center"
+        android:background="@drawable/neon_box"
+        android:padding="24dp"
+        android:elevation="8dp">
 
-        <!-- Email -->
+        <!-- Campo Email -->
         <EditText
             android:id="@+id/emailEditText"
             android:layout_width="match_parent"
@@ -73,15 +60,15 @@
             android:inputType="textEmailAddress"
             android:padding="12dp"
             android:textColor="@android:color/white"
-            android:textColorHint="#88FFFFFF" />
+            android:textColorHint="#88FFFFFF"
+            android:layout_marginBottom="12dp" />
 
-        <!-- Contraseña + ojo -->
+        <!-- Campo Contraseña + ojo -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
             <EditText
                 android:id="@+id/passwordEditText"
@@ -99,20 +86,18 @@
                 android:id="@+id/showPasswordIcon"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:clickable="true"
-                android:focusable="true"
                 android:padding="4dp"
-                android:src="@drawable/ic_eye" />
+                android:src="@drawable/ic_eye"
+                android:clickable="true"
+                android:focusable="true" />
         </LinearLayout>
 
-        <!-- Botón login -->
         <Button
             android:id="@+id/loginButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:background="@drawable/pill_button"
-            android:text="Iniciar sesión"
-            android:textColor="@android:color/white" />
+            style="@style/FancyMenuButton"
+            android:text="Iniciar sesión" />
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>

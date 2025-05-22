@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layoutDetalle"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="12dp">
+    android:padding="12dp"
+    android:background="@drawable/background_gradient">
 
     <ProgressBar
         android:id="@+id/progressBarDetalle"
@@ -23,14 +23,16 @@
         android:id="@+id/btnFinalizarTodos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Marcar todos como ENTREGADO" />
+        android:text="Marcar todos como ENTREGADO"
+        style="@style/FancyMenuButton" />
 
     <Button
         android:id="@+id/btnAceptar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="Aceptar cambios" />
+        android:text="Aceptar cambios"
+        style="@style/FancyMenuButton" />
 
     <Button
         android:id="@+id/btnCancelar"
@@ -38,5 +40,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:layout_marginBottom="8dp"
-        android:text="Cancelar" />
+        android:text="Cancelar"
+        style="@style/FancyMenuButton" />
 </LinearLayout>

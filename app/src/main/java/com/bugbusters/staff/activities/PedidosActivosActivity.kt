@@ -55,7 +55,7 @@ class PedidosActivosActivity : AppCompatActivity() {
                     val pedidos = response.body().orEmpty()
                     val adapter = ArrayAdapter(
                         this@PedidosActivosActivity,
-                        android.R.layout.simple_list_item_1,
+                        R.layout.item_pedido_blanco,
                         pedidos.map { "Mesa ${it.mesa} - Total: ${it.total}€ - Estado: ${it.estado}" }
                     )
                     listView.adapter = adapter
