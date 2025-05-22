@@ -40,4 +40,11 @@
         android:contentDescription="Código QR generado"
         android:background="@drawable/imageview_background"
         android:scaleType="fitCenter" />
+
+    <Button
+        android:id="@+id/btnPrintQR"
+        style="@style/FancyMenuButton"
+        android:text="Descargar QR"
+        android:layout_marginTop="16dp" />
+
 </LinearLayout>
