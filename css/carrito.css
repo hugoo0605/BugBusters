@@ -200,7 +200,6 @@ header {
                 0 0 3.5px #ffffff,
                 0 0 7px #ffffff,
                 0 0 8px #00f0ff;
-    border-radius: 5px;
     position: fixed;
     bottom: 70px;
     z-index: 1000;

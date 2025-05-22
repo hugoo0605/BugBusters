@@ -39,6 +39,12 @@ header {
     border-radius: 8px;
 }
 
+.fecha-pedido{
+    color:black;
+    font-weight: 600;
+    font-size: large;
+}
+
 .contenedor-historial{
     display: grid; 
     grid-template-columns: repeat(1,1fr);

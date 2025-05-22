@@ -41,7 +41,7 @@ function eliminarDelCarrito(producto) {
 }
 
 function mostrarProductos(categoriaSeleccionada = "TODOS") {
-  fetch("http://localhost:8080/api/productos")
+  fetch("https://bugbustersspring.onrender.com/api/productos")
     .then(res => res.json())
     .then(productos => {
       const contenedor = document.getElementById("contenedor-menu");
@@ -124,7 +124,7 @@ modal.addEventListener('click', (e) => {
 });
 
 // Mostrar categorías y manejar clics
-fetch("http://localhost:8080/api/productos/categorias")
+fetch("https://bugbustersspring.onrender.com/api/productos/categorias")
   .then(res => res.json())
   .then(categorias => {
     const contenedorCategorias = document.querySelector(".contenedor-categorias");
