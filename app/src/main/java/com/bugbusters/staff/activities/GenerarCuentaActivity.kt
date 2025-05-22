@@ -25,7 +25,7 @@ class GenerarCuentaActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_generar_cuenta)
 
-        inputMesaId = findViewById(R.id.inputPedidoId)
+        inputMesaId = findViewById(R.id.inputPedidoId) // si quieres, renómbralo a inputMesaId
         generarFacturaBtn = findViewById(R.id.generarFacturaBtn)
         facturaResultado = findViewById(R.id.facturaResultado)
 
@@ -67,13 +67,15 @@ class GenerarCuentaActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun mostrarFactura(factura: FacturaDTO) {
+        // Ahora factura.pedidoIds es una List<Long>, imprimimos los IDs de los pedidos:
+        val pedidosStr = factura.pedidoIds.joinToString(", ")
         facturaResultado.text = """
             ✅ Factura Generada
             ID: ${factura.id}
             Estado: ${factura.estado}
             Fecha: ${factura.fecha}
-            Total: ${factura.montoTotal} €
-            Pedidos: ${factura.pedidos.joinToString()}
+            Total: ${factura.total} €
+            Pedidos facturados: [$pedidosStr]
         """.trimIndent()
     }
 }

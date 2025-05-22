@@ -1,6 +1,5 @@
 package com.bugbusters.staff.network
 
-import com.bugbusters.staff.api.FacturaApi
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
