@@ -16,10 +16,15 @@ public class Pedido {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    // “ABIERTO”, “EN_PROCESO”, “FINALIZADO”
     private String estado;
+
     @Column(name = "fecha_creacion")
     private LocalDateTime fechaCreacion;
+
     private String notas;
+
     private double total;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -36,10 +41,7 @@ public class Pedido {
     @JsonIgnore
     private List<ItemPedido> items;
 
-    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
-    private List<Factura> facturas;
-
-    public Pedido() {
-    }
+    private List<FacturaPedido> facturasPedidos;
 }

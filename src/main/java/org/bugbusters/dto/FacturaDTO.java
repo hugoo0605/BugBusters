@@ -2,18 +2,15 @@ package org.bugbusters.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Setter
 @Getter
 public class FacturaDTO {
-
-    // Getters y Setters
     private Long id;
-    private Long pedidoId;
+    private List<Long> pedidoIds;
     private Double total;
     private LocalDateTime fecha;
     private String estado;
-
 }

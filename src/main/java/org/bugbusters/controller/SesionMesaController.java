@@ -1,3 +1,4 @@
+// src/main/java/org/bugbusters/controller/SesionMesaController.java
 package org.bugbusters.controller;
 
 import org.bugbusters.entity.Mesa;
@@ -61,9 +62,17 @@ public class SesionMesaController {
                 .orElseThrow(() -> new RuntimeException("Sesión no encontrada por token"));
     }
 
-    // (Opcional) Obtener sesiones por mesa
+    // Obtener todas las sesiones de una mesa
     @GetMapping("/mesa/{mesaId}")
     public List<SesionMesa> obtenerSesionesPorMesa(@PathVariable Long mesaId) {
         return sesionMesaRepository.findByMesaId(mesaId);
+    }
+
+    // Obtener la sesión ACTIVA (sin fechaCierre) de una mesa
+    @GetMapping("/mesa/{mesaId}/activa")
+    public SesionMesa obtenerSesionActiva(@PathVariable Long mesaId) {
+        return sesionMesaRepository
+                .findByMesaIdAndFechaCierreIsNull(mesaId)
+                .orElseThrow(() -> new RuntimeException("No hay sesión activa para la mesa " + mesaId));
     }
 }
