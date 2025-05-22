@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class FacturaService {
@@ -124,5 +125,30 @@ public class FacturaService {
         dto.setPedidoIds(pedidosIdsFacturados);
 
         return dto;
+    }
+
+    public List<FacturaDTO> listarFacturasPorEstado(String estado) {
+        List<Factura> facturas = facturaRepository.findByEstado(estado);
+        return facturas.stream().map(f -> {
+            FacturaDTO dto = new FacturaDTO();
+            dto.setId(f.getId());
+            dto.setTotal(f.getTotal());
+            dto.setFecha(f.getFecha());
+            dto.setEstado(f.getEstado());
+            // Si quieres, puedes cargar los pedidos asociados y pasarlos:
+            List<Long> pedidosIds = f.getFacturasPedidos().stream()
+                    .map(fp -> fp.getPedido().getId())
+                    .collect(Collectors.toList());
+            dto.setPedidoIds(pedidosIds);
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void marcarFacturaPagada(Long facturaId) {
+        Factura f = facturaRepository.findById(facturaId)
+                .orElseThrow(() -> new RuntimeException("Factura no encontrada"));
+        f.setEstado("PAGADA");
+        facturaRepository.save(f);
     }
 }
