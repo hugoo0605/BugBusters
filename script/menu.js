@@ -1,3 +1,40 @@
+let mesaUUID;
+
+function obtenerMesaDesdeURL() {
+  const params = new URLSearchParams(window.location.search);
+    const mesaUUID = params.get('mesa');
+    if (mesaUUID) {
+        localStorage.setItem('mesaUUID', mesaUUID);
+    }
+    return mesaUUID;
+}
+
+function actualizarUIConCarrito(carrito) {
+  carrito.forEach(item => {
+    const platoDiv = document.querySelector(`.plato[data-producto-id="${item.id}"]`);
+    if (platoDiv) {
+      const contador = platoDiv.querySelector(".contador");
+      if (contador) {
+        contador.textContent = item.cantidad;
+      }
+    }
+  });
+}
+
+function actualizarInterfazConPedido(pedido) {
+  if (!pedido || !pedido.items) return;
+
+  pedido.items.forEach(item => {
+    const platoDiv = document.querySelector(`.plato[data-producto-id="${item.producto.id}"]`);
+    if (platoDiv) {
+    const contador = platoDiv.querySelector(".contador");
+    if (contador) {
+      contador.textContent = item.cantidad;
+    }
+    }
+  });
+}
+
 function obtenerCarrito() {
   return JSON.parse(localStorage.getItem("carrito")) || [];
 }
@@ -59,6 +96,7 @@ function mostrarProductos(categoriaSeleccionada = "TODOS") {
 
         const divPlato = document.createElement("div");
         divPlato.className = "plato";
+        divPlato.setAttribute("data-producto-id", producto.id);
         divPlato.innerHTML = `
           <div class="info-plato">
               <div class="texto-plato">
@@ -82,6 +120,7 @@ function mostrarProductos(categoriaSeleccionada = "TODOS") {
           let nuevaCantidad = parseInt(contadorSpan.textContent, 10) + 1;
           contadorSpan.textContent = nuevaCantidad;
           añadirAlCarrito(producto);
+          enviarActualizacionAlBackend(producto.id, nuevaCantidad, mesaUUID);
         });
 
         btnMenos.addEventListener("click", () => {
@@ -89,6 +128,7 @@ function mostrarProductos(categoriaSeleccionada = "TODOS") {
           if (actual > 0) {
             contadorSpan.textContent = actual - 1;
             eliminarDelCarrito(producto);
+            enviarActualizacionAlBackend(producto.id, nuevaCantidad, mesaUUID);
           }
         });
 
@@ -155,7 +195,37 @@ fetch("https://bugbustersspring.onrender.com/api/productos/categorias")
 document.addEventListener("DOMContentLoaded", () => {
   mostrarProductos("TODOS");
   actualizarContadorCarrito();
+
+  const socket = new SockJS("https://bugbustersspring.onrender.com/ws");
+  const stompClient = Stomp.over(socket);
+
+  stompClient.connect({}, function () {
+    mesaUUID = obtenerMesaDesdeURL();
+    if (!mesaUUID) {
+      mesaUUID = localStorage.getItem("mesaUUID");
+    } 
+    console.log(`Suscrito al canal /topic/mesa/${mesaUUID}`);
+
+    stompClient.subscribe(`/topic/mesa/${mesaUUID}`, function (mensaje) {
+    const pedido = JSON.parse(mensaje.body);
+
+    const nuevoCarrito = pedido.items.map(item => ({
+      id: item.producto.id,
+      nombre: item.producto.nombre,
+      precio: item.producto.precio,
+      imagenes: item.producto.imagenes,
+      cantidad: item.cantidad
+    }));
+
+    localStorage.setItem("carrito", JSON.stringify(nuevoCarrito));
+    actualizarUIConCarrito(nuevoCarrito);
+    actualizarContadorCarrito();
+    actualizarPrecioTotal();
+    console.log("Mensaje recibido en esta pestaña", pedido)
+  });
+  });
 });
+
 
 // Si vuelves a esta página desde el historial (botón atrás del navegador)
 window.addEventListener("pageshow", (event) => {
@@ -163,3 +233,23 @@ window.addEventListener("pageshow", (event) => {
     mostrarProductos("TODOS");
   }
 });
+
+function enviarActualizacionAlBackend(productoId, cantidad, mesaUUID) {
+  const pedidoId = localStorage.getItem(`pedido_mesa_${mesaUUID}`);
+  if (!pedidoId) return;
+
+  fetch(`https://bugbustersspring.onrender.com/api/pedidos/${pedidoId}/items`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      productoId: productoId,
+      cantidad: cantidad
+    })
+  })
+  .then(response => {
+  if (!response.ok) {
+  console.error("Error al actualizar el pedido");
+  }
+  })
+  .catch(err => console.error("Error de red:", err));
+}
