@@ -5,11 +5,14 @@ import org.bugbusters.dto.PedidoDTO;
 import org.bugbusters.dto.PedidoResponseDTO;
 import org.bugbusters.entity.*;
 import org.bugbusters.repository.*;
+import org.bugbusters.service.PedidoNotificacionService;
+import org.bugbusters.service.PedidoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -21,15 +24,19 @@ public class PedidoController {
     private final TrabajadorRepository trabajadorRepository;
     private final ProductoRepository productoRepository;
     private final ItemPedidoRepository itemPedidoRepository;
+    private final PedidoService pedidoService;
+    private final PedidoNotificacionService pedidoNotificacionService;
 
     public PedidoController(PedidoRepository pedidoRepository,
                             SesionMesaRepository sesionMesaRepository,
-                            TrabajadorRepository trabajadorRepository, ProductoRepository productoRepository, ItemPedidoRepository itemPedidoRepository) {
+                            TrabajadorRepository trabajadorRepository, ProductoRepository productoRepository, ItemPedidoRepository itemPedidoRepository, PedidoService pedidoService, PedidoNotificacionService pedidoNotificacionService) {
         this.pedidoRepository = pedidoRepository;
         this.sesionMesaRepository = sesionMesaRepository;
         this.trabajadorRepository = trabajadorRepository;
         this.productoRepository = productoRepository;
         this.itemPedidoRepository = itemPedidoRepository;
+        this.pedidoService = pedidoService;
+        this.pedidoNotificacionService = pedidoNotificacionService;
     }
 
     @GetMapping("/activos")
@@ -132,6 +139,16 @@ public class PedidoController {
         Pedido pedido = pedidoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Pedido no encontrado"));
         return new PedidoResponseDTO(pedido);
+    }
+
+    @PostMapping("/{id}/items")
+    public ResponseEntity<?> añadirItem(@PathVariable Long pedidoId, @RequestBody ItemPedidoDTO item) {
+        Pedido pedidoActualizado = pedidoService.añadirItem(pedidoId, item);
+
+        UUID mesaUUID = pedidoActualizado.getSesionMesa().getId();
+        pedidoNotificacionService.notificarCambioEnMesa(mesaUUID, pedidoActualizado);
+
+        return ResponseEntity.ok(pedidoActualizado);
     }
 
 }
