@@ -2,7 +2,7 @@ let mesaUUID;
 
 function obtenerMesaDesdeURL() {
   const params = new URLSearchParams(window.location.search);
-    const mesaUUID = params.get('mesa');
+  mesaUUID = params.get('mesa');
     if (mesaUUID) {
         localStorage.setItem('mesaUUID', mesaUUID);
     }

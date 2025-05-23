@@ -1,6 +1,3 @@
-const params = new URLSearchParams(window.location.search);
-const mesaUUID = params.get("mesa");
-
 function enviarActualizacionAlBackend(productoId, cantidad, mesaUUID) {
   const pedidoId = localStorage.getItem(`pedido_mesa_${mesaUUID}`);
   if (!pedidoId) return;
@@ -80,6 +77,7 @@ function eliminarDelCarrito(producto) {
 }
 
 document.getElementById("confirmar-compra").addEventListener("click", () => {
+  let mesaUUID = localStorage.getItem("mesaUUID");
   const carrito = obtenerCarrito();
   if (carrito.length === 0) {
     alert("No hay productos en el carrito.");
