@@ -1,5 +1,14 @@
 let mesaUUID = sessionStorage.getItem("mesaUUID");
 
+function obtenerNumeroMesa(mesaUUID){
+  fetch(`https://bugbustersspring.onrender.com/api/sesiones/${mesaUUID}/mesa-id`)
+  .then(res=> res.json())
+  .then(id=>{
+    const mesa= document.getElementById("numero-mesa");
+    mesa.textContent = `Mesa ${id}`;
+  })
+}
+
 function enviarActualizacionAlBackend(productoId, cantidad) {
   const pedidoId = localStorage.getItem(`pedido_mesa_${mesaUUID}`);
   if (!pedidoId) return;
@@ -175,4 +184,5 @@ carrito.forEach(producto => {
 document.addEventListener("DOMContentLoaded", () => {
   actualizarContadorCarrito();
   actualizarPrecioTotal();
+  obtenerNumeroMesa(mesaUUID);
 });

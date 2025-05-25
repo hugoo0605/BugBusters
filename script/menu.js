@@ -12,6 +12,15 @@ function obtenerMesaDesdeURLoSession() {
   return sessionStorage.getItem('mesaUUID');
 }
 
+function obtenerNumeroMesa(mesaUUID){
+  fetch(`https://bugbustersspring.onrender.com/api/sesiones/${mesaUUID}/mesa-id`)
+  .then(res=> res.json())
+  .then(id=>{
+    const mesa= document.getElementById("numero-mesa");
+    mesa.textContent = `Mesa ${id}`;
+  })
+}
+
 
 function actualizarUIConCarrito(carrito) {
   carrito.forEach(item => {
@@ -208,7 +217,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   stompClient.connect({}, function () {
     mesaUUID = obtenerMesaDesdeURLoSession();
-    
+
     console.log(`Suscrito al canal /topic/mesa/${mesaUUID}`);
 
     stompClient.subscribe(`/topic/mesa/${mesaUUID}`, function (mensaje) {
@@ -226,7 +235,7 @@ document.addEventListener("DOMContentLoaded", () => {
     actualizarUIConCarrito(nuevoCarrito);
     actualizarContadorCarrito();
     actualizarPrecioTotal();
-    console.log("Mensaje recibido en esta pestaña", pedido)
+    obtenerNumeroMesa(mesaUUID);
   });
   });
 });

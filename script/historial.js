@@ -1,3 +1,12 @@
+function obtenerNumeroMesa(mesaUUID){
+  fetch(`https://bugbustersspring.onrender.com/api/sesiones/${mesaUUID}/mesa-id`)
+  .then(res=> res.json())
+  .then(id=>{
+    const mesa= document.getElementById("numero-mesa");
+    mesa.textContent = `Mesa ${id}`;
+  })
+}
+
 function actualizarContadorCarrito() {
   const mesaUUID = sessionStorage.getItem("mesaUUID");
   const carrito = JSON.parse(localStorage.getItem(`carrito_${mesaUUID}`)) || [];
@@ -10,6 +19,7 @@ function actualizarContadorCarrito() {
 
 document.addEventListener("DOMContentLoaded", () => {
     actualizarContadorCarrito();
+    obtenerNumeroMesa(mesaUUID);
 });
 const mesaUUID = sessionStorage.getItem("mesaUUID");
 const historial = JSON.parse(localStorage.getItem(`historial_${mesaUUID}`)) || [];
