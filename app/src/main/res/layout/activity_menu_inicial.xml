@@ -24,7 +24,7 @@
     <Button
         android:id="@+id/btnGenerarQR"
         style="@style/FancyMenuButton"
-        android:text="Generar QR" />
+        android:text="MESAS" />
 
     <Button
         android:id="@+id/btnGenerarCuentas"

@@ -1,35 +1,41 @@
 package com.bugbusters.staff.adapters
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
-import com.bugbusters.staff.databinding.ItemMesaBinding
-import com.bugbusters.staff.models.Mesa
+import com.bugbusters.staff.R
+import com.bugbusters.staff.dto.MesaDTO // Asegúrate de que esté el paquete correcto
 
 class MesaAdapter(
-    private val mesas: List<Mesa>,
-    private val onItemClick: (Mesa) -> Unit
+    private val onMesaClick: (Long) -> Unit
 ) : RecyclerView.Adapter<MesaAdapter.MesaViewHolder>() {
 
-    inner class MesaViewHolder(val binding: ItemMesaBinding) :
-        RecyclerView.ViewHolder(binding.root)
+    private val mesas: MutableList<MesaDTO> = mutableListOf()
+
+    inner class MesaViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val btnMesa: Button = itemView.findViewById(R.id.btnMesa)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MesaViewHolder {
-        val binding = ItemMesaBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
-        )
-        return MesaViewHolder(binding)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_mesa, parent, false)
+        return MesaViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: MesaViewHolder, position: Int) {
         val mesa = mesas[position]
-        holder.binding.tvNumeroMesa.text = mesa.numero
-        holder.binding.tvEstadoMesa.text = mesa.estado
-
-        holder.itemView.setOnClickListener { onItemClick(mesa) }
+        holder.btnMesa.text = "Mesa ${mesa.numero}"
+        holder.btnMesa.setOnClickListener {
+            onMesaClick(mesa.id ?: -1)
+        }
     }
 
-    override fun getItemCount() = mesas.size
+    override fun getItemCount(): Int = mesas.size
+
+    fun actualizarMesas(nuevas: List<MesaDTO>) {
+        mesas.clear()
+        mesas.addAll(nuevas)
+        notifyDataSetChanged()
+    }
 }

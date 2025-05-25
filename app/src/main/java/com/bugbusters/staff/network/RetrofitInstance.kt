@@ -14,4 +14,8 @@ object RetrofitInstance {
     val facturaApi: FacturaApi by lazy {
         retrofit.create(FacturaApi::class.java)
     }
+
+    val mesaApi: MesaApi by lazy {
+        retrofit.create(MesaApi::class.java)
+    }
 }
