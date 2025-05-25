@@ -142,11 +142,13 @@ function mostrarProductos(categoriaSeleccionada = "TODOS") {
         btnMenos.addEventListener("click", () => {
           let actual = parseInt(contadorSpan.textContent, 10);
           if (actual > 0) {
-            contadorSpan.textContent = actual - 1;
+            let nuevaCantidad = actual - 1;
+            contadorSpan.textContent = nuevaCantidad;
             eliminarDelCarrito(producto);
             enviarActualizacionAlBackend(producto.id, nuevaCantidad, mesaUUID);
           }
         });
+
 
         const infoPlato = divPlato.querySelector(".info-plato");
 
