@@ -4,28 +4,28 @@
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="8dp">
 
     <TextView
         android:id="@+id/tvNumeroMesa"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tvEstadoMesa"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp" />
+        android:layout_marginTop="2dp" />
 
     <Button
         android:id="@+id/btnMesa"
         style="@style/FancyMenuButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:padding="12dp"
+        android:layout_marginBottom="4dp"
+        android:padding="8dp"
         android:text="Mesa X"
         android:textColor="@android:color/white" />
 
