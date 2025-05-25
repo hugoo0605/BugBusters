@@ -19,14 +19,14 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp" />
 
-    <Button xmlns:android="http://schemas.android.com/apk/res/android"
+    <Button
         android:id="@+id/btnMesa"
+        style="@style/FancyMenuButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Mesa X"
+        android:layout_marginBottom="8dp"
         android:padding="12dp"
-        style="@style/FancyMenuButton"
-        android:textColor="@android:color/white"
-        android:layout_marginBottom="8dp"/>
+        android:text="Mesa X"
+        android:textColor="@android:color/white" />
 
 </LinearLayout>

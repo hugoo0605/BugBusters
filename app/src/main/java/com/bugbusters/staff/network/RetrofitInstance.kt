@@ -1,5 +1,6 @@
 package com.bugbusters.staff.network
 
+import com.bugbusters.staff.api.SesionMesaApi
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -17,5 +18,9 @@ object RetrofitInstance {
 
     val mesaApi: MesaApi by lazy {
         retrofit.create(MesaApi::class.java)
+    }
+
+    val sesionMesaApi: SesionMesaApi by lazy {
+        retrofit.create(SesionMesaApi::class.java)
     }
 }

@@ -3,10 +3,9 @@ package com.bugbusters.staff.activities
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.Color // ✅ import corregido
+import android.graphics.Color
 import android.graphics.pdf.PdfDocument
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -20,13 +19,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bugbusters.staff.R
 import com.bugbusters.staff.adapters.MesaAdapter
 import com.bugbusters.staff.dto.MesaDTO
-import com.bugbusters.staff.network.RetrofitInstance // ✅ import para mesaApi
+import com.bugbusters.staff.dto.SesionMesaDTO
+import com.bugbusters.staff.network.RetrofitInstance
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.WriterException
 import com.google.zxing.qrcode.QRCodeWriter
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
+import java.util.UUID
 
 class GenerarQRActivity : AppCompatActivity() {
 
@@ -35,6 +36,7 @@ class GenerarQRActivity : AppCompatActivity() {
     private lateinit var btnGuardarPdf: Button
 
     private var qrBitmap: Bitmap? = null
+    private var sesionUUID: UUID? = null
     private var mesaSeleccionadaId: Long? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,28 +48,31 @@ class GenerarQRActivity : AppCompatActivity() {
         val fabAgregarMesa: View = findViewById(R.id.fabAgregarMesa)
         btnGuardarPdf = findViewById(R.id.btnGuardarPdf)
 
+        // Ocultamos el botón de guardar PDF hasta que haya un QR generado
         btnGuardarPdf.visibility = View.GONE
-        rvMesas.layoutManager = LinearLayoutManager(this)
 
+        // Configuramos el RecyclerView
+        rvMesas.layoutManager = LinearLayoutManager(this)
         val adapter = MesaAdapter { mesaId ->
             mesaSeleccionadaId = mesaId
-            val url = "https://bugbusters-0jjv.onrender.com?$mesaId"
-            generateQR(url)?.let {
-                qrBitmap = it
-                qrImageView.setImageBitmap(it)
-                btnGuardarPdf.visibility = View.VISIBLE
-            }
+            // Al pulsar una mesa, buscamos el UUID de (la primera) sesión que tenga
+            obtenerIdSesionYGenerarQR(mesaId)
         }
         rvMesas.adapter = adapter
 
+        // Cargamos las mesas desde el backend
         cargarMesas(adapter)
 
+        // Listener para crear nuevas mesas
         fabAgregarMesa.setOnClickListener {
             crearNuevaMesa(adapter)
         }
 
+        // Cuando se pulsa guardar PDF, usamos el UUID almacenado para nombrar el archivo
         btnGuardarPdf.setOnClickListener {
-            mesaSeleccionadaId?.let { id -> downloadQRasPdf(id) }
+            sesionUUID?.let { uuid ->
+                downloadQRasPdf(uuid)
+            }
         }
     }
 
@@ -76,16 +81,13 @@ class GenerarQRActivity : AppCompatActivity() {
             try {
                 val response = RetrofitInstance.mesaApi.getMesas()
                 if (response.isSuccessful) {
-                    val mesas = response.body()
-                    Log.d("CARGA_MESAS", "Mesas recibidas: $mesas")
-                    adapter.actualizarMesas(mesas.orEmpty())
+                    val mesas = response.body().orEmpty()
+                    adapter.actualizarMesas(mesas)
                 } else {
-                    Log.e("CARGA_MESAS", "Error de respuesta: ${response.code()}")
                     Toast.makeText(this@GenerarQRActivity, "Error cargando mesas", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
-                Log.e("CARGA_MESAS", "Excepción: ${e.message}", e)
-                Toast.makeText(this@GenerarQRActivity, "Error de red", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@GenerarQRActivity, "Error de red al cargar mesas", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -93,7 +95,6 @@ class GenerarQRActivity : AppCompatActivity() {
     @SuppressLint("MissingInflatedId")
     private fun crearNuevaMesa(adapter: MesaAdapter) {
         val dialogView = layoutInflater.inflate(R.layout.dialog_nueva_mesa, null)
-
         val etNumero = dialogView.findViewById<EditText>(R.id.etNumeroMesa)
         val etEstado = dialogView.findViewById<EditText>(R.id.etEstadoMesa)
         val etCapacidad = dialogView.findViewById<EditText>(R.id.etCapacidadMesa)
@@ -132,6 +133,36 @@ class GenerarQRActivity : AppCompatActivity() {
             .show()
     }
 
+    private fun obtenerIdSesionYGenerarQR(mesaId: Long) {
+        lifecycleScope.launch {
+            try {
+                val response = RetrofitInstance.sesionMesaApi.obtenerSesionesPorMesa(mesaId)
+                if (response.isSuccessful) {
+                    val sesiones: List<SesionMesaDTO> = response.body().orEmpty()
+                    if (sesiones.isNotEmpty()) {
+                        // Tomamos la sesión en la posición 0 (puedes cambiar el índice si hace falta)
+                        val primeraSesion = sesiones[0]
+                        sesionUUID = primeraSesion.id
+
+                        // Construimos la URL con el UUID de la sesión, NO con el ID de la mesa
+                        val urlParaQR = "https://bugbusters-0jjv.onrender.com?mesa=${sesionUUID}"
+                        generateQR(urlParaQR)?.let { bitmap ->
+                            qrBitmap = bitmap
+                            mostrarQRPopup(bitmap)
+                            btnGuardarPdf.visibility = View.VISIBLE
+                        }
+                    } else {
+                        Toast.makeText(this@GenerarQRActivity, "No se encontró ninguna sesión para esa mesa", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Toast.makeText(this@GenerarQRActivity, "Error al obtener sesiones de la mesa", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(this@GenerarQRActivity, "Error de red al obtener sesión", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
     private fun generateQR(text: String): Bitmap? {
         return try {
             val bitMatrix = QRCodeWriter().encode(text, BarcodeFormat.QR_CODE, 512, 512)
@@ -148,7 +179,28 @@ class GenerarQRActivity : AppCompatActivity() {
         }
     }
 
-    private fun downloadQRasPdf(mesaId: Long) {
+    private fun mostrarQRPopup(qrBitmap: Bitmap) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_qr_popup, null)
+        val imageView = dialogView.findViewById<ImageView>(R.id.ivQRPopup)
+        val btnGuardar = dialogView.findViewById<Button>(R.id.btnGuardarPdfPopup)
+
+        imageView.setImageBitmap(qrBitmap)
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        btnGuardar.setOnClickListener {
+            sesionUUID?.let { uuid ->
+                downloadQRasPdf(uuid)
+            }
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    private fun downloadQRasPdf(uuid: UUID) {
         qrBitmap?.let { bitmap ->
             val document = PdfDocument()
             val pageInfo = PdfDocument.PageInfo.Builder(bitmap.width, bitmap.height, 1).create()
@@ -157,7 +209,8 @@ class GenerarQRActivity : AppCompatActivity() {
             canvas.drawBitmap(bitmap, 0f, 0f, null)
             document.finishPage(page)
 
-            val fileName = "qr_mesa_$mesaId.pdf"
+            // Nombramos el PDF con el UUID de la sesión
+            val fileName = "qr_mesa_${uuid}.pdf"
             val file = File(getExternalFilesDir(null), fileName)
             try {
                 val outputStream = FileOutputStream(file)
