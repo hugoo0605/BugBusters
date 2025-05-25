@@ -1,5 +1,6 @@
 package org.bugbusters.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -9,13 +10,14 @@ import java.util.UUID;
 @Entity
 @Table(name = "sesiones_mesa")
 @Data
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class SesionMesa {
     @Id
     @GeneratedValue
     private UUID id;
 
-    @ManyToOne
-    @JoinColumn(name = "mesa_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "mesa_id", nullable = false)
     private Mesa mesa;
 
     @Column(name = "token_acceso")
