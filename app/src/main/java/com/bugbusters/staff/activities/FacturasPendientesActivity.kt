@@ -85,46 +85,56 @@ class FacturasPendientesActivity : AppCompatActivity() {
     }
 
     private fun marcarFacturaPagada(factura: FacturaDTO) {
-        lifecycleScope.launch {
-            try {
-                val response = RetrofitInstance.facturaApi.pagarFactura(factura.id)
-                if (response.isSuccessful) {
-                    Toast.makeText(
-                        this@FacturasPendientesActivity,
-                        "Factura ${factura.id} marcada como pagada",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    // Recargar la lista
-                    cargarFacturasPendientes()
-                } else {
-                    Toast.makeText(
-                        this@FacturasPendientesActivity,
-                        "Error marcando como pagada: ${response.code()}",
-                        Toast.LENGTH_LONG
-                    ).show()
+        // Mostrar diálogo de confirmación
+        val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle("Confirmar pago")
+            .setMessage("¿Estás seguro de que quieres marcar la factura ${factura.id} como pagada?")
+            .setPositiveButton("Sí") { _, _ ->
+                // Si el usuario confirma, se marca como pagada
+                lifecycleScope.launch {
+                    try {
+                        val response = RetrofitInstance.facturaApi.pagarFactura(factura.id)
+                        if (response.isSuccessful) {
+                            Toast.makeText(
+                                this@FacturasPendientesActivity,
+                                "✅ Factura ${factura.id} marcada como pagada",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            cargarFacturasPendientes()
+                        } else {
+                            Toast.makeText(
+                                this@FacturasPendientesActivity,
+                                "❌ Error marcando como pagada: ${response.code()}",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    } catch (e: IOException) {
+                        Toast.makeText(
+                            this@FacturasPendientesActivity,
+                            "Error de red: ${e.message}",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        Log.e("FacturasPendientes", "IOException", e)
+                    } catch (e: HttpException) {
+                        Toast.makeText(
+                            this@FacturasPendientesActivity,
+                            "Error HTTP: ${e.message}",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        Log.e("FacturasPendientes", "HttpException", e)
+                    } catch (e: Exception) {
+                        Toast.makeText(
+                            this@FacturasPendientesActivity,
+                            "Error inesperado: ${e.message}",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        Log.e("FacturasPendientes", "Exception", e)
+                    }
                 }
-            } catch (e: IOException) {
-                Toast.makeText(
-                    this@FacturasPendientesActivity,
-                    "Error red: ${e.message}",
-                    Toast.LENGTH_LONG
-                ).show()
-                Log.e("FacturasPendientes", "IOException", e)
-            } catch (e: HttpException) {
-                Toast.makeText(
-                    this@FacturasPendientesActivity,
-                    "Error HTTP: ${e.message}",
-                    Toast.LENGTH_LONG
-                ).show()
-                Log.e("FacturasPendientes", "HttpException", e)
-            } catch (e: Exception) {
-                Toast.makeText(
-                    this@FacturasPendientesActivity,
-                    "Error inesperado: ${e.message}",
-                    Toast.LENGTH_LONG
-                ).show()
-                Log.e("FacturasPendientes", "Exception", e)
             }
-        }
+            .setNegativeButton("Cancelar", null)
+            .create()
+
+        dialog.show()
     }
 }
