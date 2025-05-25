@@ -2,11 +2,19 @@ let mesaUUID;
 
 function obtenerMesaDesdeURL() {
   const params = new URLSearchParams(window.location.search);
-  mesaUUID = params.get('mesa');
-    if (mesaUUID) {
-        localStorage.setItem('mesaUUID', mesaUUID);
+  const mesaUUIDEnURL = params.get('mesa');
+
+  if (mesaUUIDEnURL) {
+    // Si en localStorage no hay ningún UUID o es distinto, guardamos el nuevo
+    const mesaUUIDActual = localStorage.getItem('mesaUUID');
+    if (!mesaUUIDActual || mesaUUIDActual !== mesaUUIDEnURL) {
+      localStorage.setItem('mesaUUID', mesaUUIDEnURL);
     }
-    return mesaUUID;
+    return mesaUUIDEnURL;
+  }
+
+  // Si no hay en la URL, devolvemos el que ya esté en localStorage
+  return localStorage.getItem('mesaUUID');
 }
 
 function actualizarUIConCarrito(carrito) {
