@@ -5,6 +5,7 @@ import org.bugbusters.entity.Mesa;
 import org.bugbusters.entity.SesionMesa;
 import org.bugbusters.repository.MesaRepository;
 import org.bugbusters.repository.SesionMesaRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -75,4 +76,12 @@ public class SesionMesaController {
                 .findByMesaIdAndFechaCierreIsNull(mesaId)
                 .orElseThrow(() -> new RuntimeException("No hay sesión activa para la mesa " + mesaId));
     }
+
+    @GetMapping("/{id}/mesa-id")
+    public ResponseEntity<Long> obtenerIdMesaPorSesionId(@PathVariable UUID id) {
+        return sesionMesaRepository.findById(id)
+                .map(sesion -> ResponseEntity.ok(sesion.getMesa().getId()))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
 }
