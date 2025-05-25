@@ -21,7 +21,7 @@ function enviarActualizacionAlBackend(productoId, cantidad, mesaUUID) {
 const contenedor = document.getElementById("carrito-contenedor");
 
 function actualizarContadorCarrito() {
-  const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+  const carrito = JSON.parse(localStorage.getItem(`carrito_${mesaUUID}`)) || [];
   const total = carrito.reduce((sum, item) => sum + item.cantidad, 0);
   const spanContador = document.getElementById("contador-carrito");
   if (spanContador) {
@@ -30,7 +30,7 @@ function actualizarContadorCarrito() {
 }
 
 function actualizarPrecioTotal() {
-  const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+  const carrito = JSON.parse(localStorage.getItem(`carrito_${mesaUUID}`)) || [];
   const total = carrito.reduce((sum, item) => sum + item.precio * item.cantidad, 0);
   const totalElement = document.getElementById("precio-total");
   if (totalElement) {
@@ -39,11 +39,13 @@ function actualizarPrecioTotal() {
 }
 
 function obtenerCarrito() {
-  return JSON.parse(localStorage.getItem("carrito")) || [];
+  const mesaUUID = localStorage.getItem("mesaUUID");
+  return JSON.parse(localStorage.getItem(`carrito_${mesaUUID}`)) || [];
 }
 
 function guardarCarrito(carrito) {
-  localStorage.setItem("carrito", JSON.stringify(carrito));
+  const mesaUUID = localStorage.getItem("mesaUUID");
+  localStorage.setItem(`carrito_${mesaUUID}`, JSON.stringify(carrito));
 }
 
 function añadirAlCarrito(producto) {

@@ -36,15 +36,17 @@ function actualizarInterfazConPedido(pedido) {
 }
 
 function obtenerCarrito() {
-  return JSON.parse(localStorage.getItem("carrito")) || [];
+  const mesaUUID = localStorage.getItem("mesaUUID");
+  return JSON.parse(localStorage.getItem(`carrito_${mesaUUID}`)) || [];
 }
 
 function guardarCarrito(carrito) {
-  localStorage.setItem("carrito", JSON.stringify(carrito));
+  const mesaUUID = localStorage.getItem("mesaUUID");
+  localStorage.setItem(`carrito_${mesaUUID}`, JSON.stringify(carrito));
 }
 
 function actualizarContadorCarrito() {
-  const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+  const carrito = JSON.parse(localStorage.getItem(`carrito_${mesaUUID}`)) || [];
   const total = carrito.reduce((sum, item) => sum + item.cantidad, 0);
   const spanContador = document.getElementById("contador-carrito");
   if (spanContador) {
@@ -217,7 +219,7 @@ document.addEventListener("DOMContentLoaded", () => {
       cantidad: item.cantidad
     }));
 
-    localStorage.setItem("carrito", JSON.stringify(nuevoCarrito));
+    localStorage.setItem(`carrito_${mesaUUID}`, JSON.stringify(nuevoCarrito));
     actualizarUIConCarrito(nuevoCarrito);
     actualizarContadorCarrito();
     actualizarPrecioTotal();
