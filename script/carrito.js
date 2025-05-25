@@ -115,7 +115,7 @@ document.getElementById("confirmar-compra").addEventListener("click", () => {
   })
   .then(data => {
     console.log("Pedido guardado:", data);
-    const historial = JSON.parse(localStorage.getItem("historial")) || [];
+    const historial = JSON.parse(localStorage.getItem(`historial_${mesaUUID}`)) || [];
     historial.push({ fechaHora: new Date().toISOString(), items: carrito });
     localStorage.setItem("historial", JSON.stringify(historial));
     localStorage.removeItem(`carrito_${mesaUUID}`);

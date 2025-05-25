@@ -1,16 +1,18 @@
 function actualizarContadorCarrito() {
-    const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
-    const total = carrito.reduce((sum, item) => sum + item.cantidad, 0);
-    const spanContador = document.getElementById("contador-carrito");
-    if (spanContador) {
-      spanContador.textContent = total;
-    }
+  const mesaUUID = sessionStorage.getItem("mesaUUID");
+  const carrito = JSON.parse(localStorage.getItem(`carrito_${mesaUUID}`)) || [];
+  const total = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+  const spanContador = document.getElementById("contador-carrito");
+  if (spanContador) {
+    spanContador.textContent = total;
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
     actualizarContadorCarrito();
 });
-const historial = JSON.parse(localStorage.getItem("historial")) || [];
+const mesaUUID = sessionStorage.getItem("mesaUUID");
+const historial = JSON.parse(localStorage.getItem(`historial_${mesaUUID}`)) || [];
 const contenedor = document.getElementById("contenedor-historial");
 
 historial.forEach(pedido => {
