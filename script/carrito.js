@@ -1,4 +1,4 @@
-let mesaUUID = localStorage.getItem("mesaUUID");
+let mesaUUID = sessionStorage.getItem("mesaUUID");
 
 function enviarActualizacionAlBackend(productoId, cantidad) {
   const pedidoId = localStorage.getItem(`pedido_mesa_${mesaUUID}`);
