@@ -7,6 +7,7 @@ import lombok.Data;
 @Table(name = "mesas")
 @Data
 public class Mesa {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,4 +20,3 @@ public class Mesa {
 
     private String ubicacion;
 }
-
