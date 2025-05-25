@@ -6,6 +6,7 @@ import android.graphics.Canvas
 import android.graphics.Color // ✅ import corregido
 import android.graphics.pdf.PdfDocument
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -72,11 +73,19 @@ class GenerarQRActivity : AppCompatActivity() {
 
     private fun cargarMesas(adapter: MesaAdapter) {
         lifecycleScope.launch {
-            val response = RetrofitInstance.mesaApi.getMesas()
-            if (response.isSuccessful) {
-                adapter.actualizarMesas(response.body().orEmpty())
-            } else {
-                Toast.makeText(this@GenerarQRActivity, "Error cargando mesas", Toast.LENGTH_SHORT).show()
+            try {
+                val response = RetrofitInstance.mesaApi.getMesas()
+                if (response.isSuccessful) {
+                    val mesas = response.body()
+                    Log.d("CARGA_MESAS", "Mesas recibidas: $mesas")
+                    adapter.actualizarMesas(mesas.orEmpty())
+                } else {
+                    Log.e("CARGA_MESAS", "Error de respuesta: ${response.code()}")
+                    Toast.makeText(this@GenerarQRActivity, "Error cargando mesas", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                Log.e("CARGA_MESAS", "Excepción: ${e.message}", e)
+                Toast.makeText(this@GenerarQRActivity, "Error de red", Toast.LENGTH_SHORT).show()
             }
         }
     }
