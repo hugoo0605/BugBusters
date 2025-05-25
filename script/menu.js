@@ -209,15 +209,15 @@ fetch("https://bugbustersspring.onrender.com/api/productos/categorias")
 
 // Mostrar productos al cargar y al volver desde historial
 document.addEventListener("DOMContentLoaded", () => {
+  mesaUUID = obtenerMesaDesdeURLoSession();
   mostrarProductos("TODOS");
   actualizarContadorCarrito();
+  obtenerNumeroMesa(mesaUUID);
 
   const socket = new SockJS("https://bugbustersspring.onrender.com/ws");
   const stompClient = Stomp.over(socket);
 
   stompClient.connect({}, function () {
-    mesaUUID = obtenerMesaDesdeURLoSession();
-
     console.log(`Suscrito al canal /topic/mesa/${mesaUUID}`);
 
     stompClient.subscribe(`/topic/mesa/${mesaUUID}`, function (mensaje) {
@@ -235,7 +235,6 @@ document.addEventListener("DOMContentLoaded", () => {
     actualizarUIConCarrito(nuevoCarrito);
     actualizarContadorCarrito();
     actualizarPrecioTotal();
-    obtenerNumeroMesa(mesaUUID);
   });
   });
 });
