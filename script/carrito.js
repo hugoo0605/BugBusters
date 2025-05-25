@@ -1,29 +1,26 @@
-let mesaUUID;
+let mesaUUID = localStorage.getItem("mesaUUID");
 
-function enviarActualizacionAlBackend(productoId, cantidad, mesaUUID) {
+function enviarActualizacionAlBackend(productoId, cantidad) {
   const pedidoId = localStorage.getItem(`pedido_mesa_${mesaUUID}`);
   if (!pedidoId) return;
 
   fetch(`https://bugbustersspring.onrender.com/api/pedidos/${pedidoId}/items`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      productoId: productoId,
-      cantidad: cantidad
-    })
+    body: JSON.stringify({ productoId, cantidad })
   })
-    .then(response => {
-      if (!response.ok) {
-        console.error("Error al actualizar el pedido");
-      }
-    })
-    .catch(err => console.error("Error de red:", err));
+  .then(response => {
+    if (!response.ok) {
+      console.error("Error al actualizar el pedido");
+    }
+  })
+  .catch(err => console.error("Error de red:", err));
 }
 
 const contenedor = document.getElementById("carrito-contenedor");
 
 function actualizarContadorCarrito() {
-  const carrito = JSON.parse(localStorage.getItem(`carrito_${mesaUUID}`)) || [];
+  const carrito = obtenerCarrito();
   const total = carrito.reduce((sum, item) => sum + item.cantidad, 0);
   const spanContador = document.getElementById("contador-carrito");
   if (spanContador) {
@@ -32,7 +29,7 @@ function actualizarContadorCarrito() {
 }
 
 function actualizarPrecioTotal() {
-  const carrito = JSON.parse(localStorage.getItem(`carrito_${mesaUUID}`)) || [];
+  const carrito = obtenerCarrito();
   const total = carrito.reduce((sum, item) => sum + item.precio * item.cantidad, 0);
   const totalElement = document.getElementById("precio-total");
   if (totalElement) {
@@ -41,27 +38,30 @@ function actualizarPrecioTotal() {
 }
 
 function obtenerCarrito() {
-  const mesaUUID = localStorage.getItem("mesaUUID");
   return JSON.parse(localStorage.getItem(`carrito_${mesaUUID}`)) || [];
 }
 
 function guardarCarrito(carrito) {
-  const mesaUUID = localStorage.getItem("mesaUUID");
   localStorage.setItem(`carrito_${mesaUUID}`, JSON.stringify(carrito));
 }
 
 function añadirAlCarrito(producto) {
   const carrito = obtenerCarrito();
   const existente = carrito.find(item => item.id === producto.id);
+  let nuevaCantidad;
+
   if (existente) {
     existente.cantidad += 1;
+    nuevaCantidad = existente.cantidad;
   } else {
     carrito.push({ ...producto, cantidad: 1 });
+    nuevaCantidad = 1;
   }
+
   guardarCarrito(carrito);
   actualizarContadorCarrito();
   actualizarPrecioTotal();
-  enviarActualizacionAlBackend(producto.id, existente ? existente.cantidad : 1, mesaUUID);
+  enviarActualizacionAlBackend(producto.id, nuevaCantidad);
 }
 
 function eliminarDelCarrito(producto) {
@@ -70,31 +70,27 @@ function eliminarDelCarrito(producto) {
   if (index !== -1) {
     carrito[index].cantidad -= 1;
     const cantidadActual = carrito[index].cantidad;
+
     if (cantidadActual <= 0) {
       carrito.splice(index, 1);
     }
+
     guardarCarrito(carrito);
     actualizarContadorCarrito();
     actualizarPrecioTotal();
-    enviarActualizacionAlBackend(producto.id, cantidadActual > 0 ? cantidadActual : 0, mesaUUID);
+    enviarActualizacionAlBackend(producto.id, Math.max(0, cantidadActual));
   }
 }
 
 document.getElementById("confirmar-compra").addEventListener("click", () => {
-  mesaUUID = localStorage.getItem("mesaUUID");
   const carrito = obtenerCarrito();
   if (carrito.length === 0) {
     alert("No hay productos en el carrito.");
     return;
   }
 
-  const nuevoPedido = {
-    fechaHora: new Date().toISOString(),
-    items: carrito
-  };
-
   const pedido = {
-    sesionId: mesaUUID, // Mesa real obtenida por URL
+    sesionId: mesaUUID,
     trabajadorId: 1,
     estado: "PENDIENTE",
     total: carrito.reduce((sum, item) => sum + item.precio * item.cantidad, 0),
@@ -113,22 +109,22 @@ document.getElementById("confirmar-compra").addEventListener("click", () => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(pedido)
   })
-    .then(res => {
-      if (!res.ok) throw new Error("Error al guardar el pedido");
-      return res.text();
-    })
-    .then(data => {
-      console.log("Pedido guardado:", data);
-      const historial = JSON.parse(localStorage.getItem("historial")) || [];
-      historial.push(nuevoPedido);
-      localStorage.setItem("historial", JSON.stringify(historial));
-      localStorage.removeItem("carrito");
-      window.location.href = "historial.html";
-    })
-    .catch(err => {
-      console.error("Error:", err);
-      alert("Hubo un error al enviar el pedido.");
-    });
+  .then(res => {
+    if (!res.ok) throw new Error("Error al guardar el pedido");
+    return res.text();
+  })
+  .then(data => {
+    console.log("Pedido guardado:", data);
+    const historial = JSON.parse(localStorage.getItem("historial")) || [];
+    historial.push({ fechaHora: new Date().toISOString(), items: carrito });
+    localStorage.setItem("historial", JSON.stringify(historial));
+    localStorage.removeItem(`carrito_${mesaUUID}`);
+    window.location.href = "historial.html";
+  })
+  .catch(err => {
+    console.error("Error:", err);
+    alert("Hubo un error al enviar el pedido.");
+  });
 });
 
 // Mostrar productos en el carrito

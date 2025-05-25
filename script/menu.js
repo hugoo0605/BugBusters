@@ -1,21 +1,17 @@
-let mesaUUID;
+let mesaUUID = obtenerMesaDesdeURLoSession();
 
-function obtenerMesaDesdeURL() {
+function obtenerMesaDesdeURLoSession() {
   const params = new URLSearchParams(window.location.search);
   const mesaUUIDEnURL = params.get('mesa');
 
   if (mesaUUIDEnURL) {
-    // Si en localStorage no hay ningún UUID o es distinto, guardamos el nuevo
-    const mesaUUIDActual = localStorage.getItem('mesaUUID');
-    if (!mesaUUIDActual || mesaUUIDActual !== mesaUUIDEnURL) {
-      localStorage.setItem('mesaUUID', mesaUUIDEnURL);
-    }
+    sessionStorage.setItem('mesaUUID', mesaUUIDEnURL);
     return mesaUUIDEnURL;
   }
 
-  // Si no hay en la URL, devolvemos el que ya esté en localStorage
-  return localStorage.getItem('mesaUUID');
+  return sessionStorage.getItem('mesaUUID');
 }
+
 
 function actualizarUIConCarrito(carrito) {
   carrito.forEach(item => {
@@ -44,16 +40,17 @@ function actualizarInterfazConPedido(pedido) {
 }
 
 function obtenerCarrito() {
-  const mesaUUID = localStorage.getItem("mesaUUID");
+  const mesaUUID = sessionStorage.getItem("mesaUUID");
   return JSON.parse(localStorage.getItem(`carrito_${mesaUUID}`)) || [];
 }
 
 function guardarCarrito(carrito) {
-  const mesaUUID = localStorage.getItem("mesaUUID");
+  const mesaUUID = sessionStorage.getItem("mesaUUID");
   localStorage.setItem(`carrito_${mesaUUID}`, JSON.stringify(carrito));
 }
 
 function actualizarContadorCarrito() {
+  const mesaUUID = sessionStorage.getItem("mesaUUID");
   const carrito = JSON.parse(localStorage.getItem(`carrito_${mesaUUID}`)) || [];
   const total = carrito.reduce((sum, item) => sum + item.cantidad, 0);
   const spanContador = document.getElementById("contador-carrito");
@@ -210,10 +207,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const stompClient = Stomp.over(socket);
 
   stompClient.connect({}, function () {
-    mesaUUID = obtenerMesaDesdeURL();
-    if (!mesaUUID) {
-      mesaUUID = localStorage.getItem("mesaUUID");
-    } 
+    mesaUUID = obtenerMesaDesdeURLoSession();
+    
     console.log(`Suscrito al canal /topic/mesa/${mesaUUID}`);
 
     stompClient.subscribe(`/topic/mesa/${mesaUUID}`, function (mensaje) {
