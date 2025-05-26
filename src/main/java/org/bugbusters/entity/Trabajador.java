@@ -12,17 +12,11 @@ public class Trabajador {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String dni;
-
     private String nombre;
-
     private String email;
-
     private String password;
-
     private String rol;
-
     private Boolean activo = true;
 
     @Column(name = "fecha_creacion")

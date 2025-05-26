@@ -18,10 +18,8 @@ public class Factura {
     private Double total;
 
     private LocalDateTime fecha;
+    private String estado;
 
-    private String estado; // POR EJEMPLO: PENDIENTE, PAGADA, ANULADA, etc.
-
-    // Relación 1:N con FacturaPedido:
     @OneToMany(mappedBy = "factura", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<FacturaPedido> facturasPedidos;
 }

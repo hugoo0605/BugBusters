@@ -17,7 +17,7 @@ public class ComandaCocina {
     @JoinColumn(name = "item_pedido_id")
     private ItemPedido itemPedido;
 
-    private String prioridad; // NORMAL o URGENTE
+    private String prioridad;
 
     @Column(name = "hora_entrega_estimada")
     private LocalDateTime horaEntregaEstimada;
