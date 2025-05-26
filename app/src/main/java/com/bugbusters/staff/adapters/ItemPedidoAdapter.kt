@@ -13,7 +13,7 @@ class ItemPedidoAdapter(
     private val items: List<ItemPedidoDTO>
 ) : RecyclerView.Adapter<ItemPedidoAdapter.ItemViewHolder>() {
 
-    private val estados = listOf("PENDIENTE", "PREPARACION", "LISTO", "ENTREGADO")
+    private val estados = listOf("PENDIENTE", "PREPARACION", "LISTO", "ENTREGADO", "CANCELADO")
 
     inner class ItemViewHolder(val binding: ItemProductoBinding) :
         RecyclerView.ViewHolder(binding.root)

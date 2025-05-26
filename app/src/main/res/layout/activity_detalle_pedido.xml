@@ -35,6 +35,14 @@
         android:text="Aceptar cambios" />
 
     <Button
+        android:id="@+id/btnCancelarPedido"
+        style="@style/FancyMenuButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Cancelar pedido" />
+
+    <Button
         android:id="@+id/btnCancelar"
         style="@style/FancyMenuButton"
         android:layout_width="match_parent"

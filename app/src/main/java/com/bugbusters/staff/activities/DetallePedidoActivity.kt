@@ -158,5 +158,35 @@ class DetallePedidoActivity : AppCompatActivity() {
 
             finish()
         }
+
+        binding.btnCancelarPedido.setOnClickListener {
+            api.actualizarEstadoPedido(pedidoId, "CANCELADO").enqueue(object : Callback<Void> {
+                override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                    if (response.isSuccessful) {
+                        Toast.makeText(
+                            this@DetallePedidoActivity,
+                            "Pedido cancelado correctamente",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        finish()
+                    } else {
+                        val errorMsg = response.errorBody()?.string() ?: "Error desconocido"
+                        Toast.makeText(
+                            this@DetallePedidoActivity,
+                            "Error al cancelar pedido: ${response.code()} - $errorMsg",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<Void>, t: Throwable) {
+                    Toast.makeText(
+                        this@DetallePedidoActivity,
+                        "Fallo: ${t.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            })
+        }
     }
 }

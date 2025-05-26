@@ -28,7 +28,7 @@ class PedidosActivosActivity : AppCompatActivity() {
     //Refresca la pagina cada x tiempo
     private val refreshHandler = Handler(Looper.getMainLooper())
     private lateinit var refreshRunnable: Runnable
-    private val refreshInterval: Long = 5000
+    private val refreshInterval: Long = 1000
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
