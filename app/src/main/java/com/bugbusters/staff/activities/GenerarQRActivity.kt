@@ -13,6 +13,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -48,27 +49,22 @@ class GenerarQRActivity : AppCompatActivity() {
         val fabAgregarMesa: View = findViewById(R.id.fabAgregarMesa)
         btnGuardarPdf = findViewById(R.id.btnGuardarPdf)
 
-        // Ocultamos el botón de guardar PDF hasta que haya un QR generado
         btnGuardarPdf.visibility = View.GONE
 
         // Configuramos el RecyclerView
         rvMesas.layoutManager = LinearLayoutManager(this)
         val adapter = MesaAdapter { mesaId ->
             mesaSeleccionadaId = mesaId
-            // Al pulsar una mesa, buscamos el UUID de (la primera) sesión que tenga
             obtenerIdSesionYGenerarQR(mesaId)
         }
         rvMesas.adapter = adapter
 
-        // Cargamos las mesas desde el backend
         cargarMesas(adapter)
 
-        // Listener para crear nuevas mesas
         fabAgregarMesa.setOnClickListener {
             crearNuevaMesa(adapter)
         }
 
-        // Cuando se pulsa guardar PDF, usamos el UUID almacenado para nombrar el archivo
         btnGuardarPdf.setOnClickListener {
             sesionUUID?.let { uuid ->
                 downloadQRasPdf(uuid)
@@ -140,11 +136,9 @@ class GenerarQRActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     val sesiones: List<SesionMesaDTO> = response.body().orEmpty()
                     if (sesiones.isNotEmpty()) {
-                        // Tomamos la sesión en la posición 0 (puedes cambiar el índice si hace falta)
                         val primeraSesion = sesiones[0]
                         sesionUUID = primeraSesion.id
 
-                        // Construimos la URL con el UUID de la sesión, NO con el ID de la mesa
                         val urlParaQR = "https://bugbusters-0jjv.onrender.com?mesa=${sesionUUID}"
                         generateQR(urlParaQR)?.let { bitmap ->
                             qrBitmap = bitmap
@@ -202,16 +196,48 @@ class GenerarQRActivity : AppCompatActivity() {
 
     private fun downloadQRasPdf(uuid: UUID) {
         qrBitmap?.let { bitmap ->
+            val width = 600
+            val height = 800
             val document = PdfDocument()
-            val pageInfo = PdfDocument.PageInfo.Builder(bitmap.width, bitmap.height, 1).create()
+            val pageInfo = PdfDocument.PageInfo.Builder(width, height, 1).create()
             val page = document.startPage(pageInfo)
             val canvas: Canvas = page.canvas
-            canvas.drawBitmap(bitmap, 0f, 0f, null)
+
+            val background = ContextCompat.getDrawable(this, R.drawable.background_gradient)
+            background?.setBounds(0, 0, width, height)
+            background?.draw(canvas)
+
+            val paint = android.graphics.Paint()
+            paint.color = Color.WHITE
+            paint.textSize = 32f
+            paint.isFakeBoldText = true
+
+            val titulo = "Mesa $mesaSeleccionadaId - Escaneá para ver el menú"
+            val tituloWidth = paint.measureText(titulo)
+            canvas.drawText(titulo, (width - tituloWidth) / 2f, 80f, paint)
+
+            val qrSize = 300
+            val qrLeft = (width - qrSize) / 2f
+            val qrTop = 120f
+            canvas.drawBitmap(bitmap, null, android.graphics.RectF(qrLeft, qrTop, qrLeft + qrSize, qrTop + qrSize), null)
+
+            paint.textSize = 24f
+            paint.isFakeBoldText = false
+            val mensaje = "Gracias por visitarnos"
+            val mensajeWidth = paint.measureText(mensaje)
+            canvas.drawText(mensaje, (width - mensajeWidth) / 2f, 500f, paint)
+
+            paint.textSize = 20f
+            paint.color = Color.LTGRAY
+            val web = "Bar Mirabel"
+            val webWidth = paint.measureText(web)
+            canvas.drawText(web, (width - webWidth) / 2f, 540f, paint)
+
             document.finishPage(page)
 
-            // Nombramos el PDF con el UUID de la sesión
             val fileName = "qr_mesa_${uuid}.pdf"
             val file = File(getExternalFilesDir(null), fileName)
+
             try {
                 val outputStream = FileOutputStream(file)
                 document.writeTo(outputStream)
