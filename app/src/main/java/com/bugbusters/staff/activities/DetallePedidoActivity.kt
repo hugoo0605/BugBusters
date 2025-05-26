@@ -93,7 +93,7 @@ class DetallePedidoActivity : AppCompatActivity() {
 
         binding.btnAceptar.setOnClickListener {
             val itemsActualizados = adapter.getItemsActualizados()
-            var entregados = true
+            var entregable = true
 
             for (item in itemsActualizados) {
                 api.actualizarEstadoItem(item.id, item.estado)
@@ -118,20 +118,20 @@ class DetallePedidoActivity : AppCompatActivity() {
                         }
                     })
 
-                // Si hay algún item no entregado, marcamos como false
-                if (item.estado != "ENTREGADO") {
-                    entregados = false
+                // Solo se finaliza el pedido si el estado de los productos es ENTREGADO o CANCELADO
+                if (item.estado != "ENTREGADO" && item.estado != "CANCELADO") {
+                    entregable = false
                 }
             }
 
-            if (entregados) {
+            if (entregable) {
                 api.actualizarEstadoPedido(pedidoId, "ENTREGADO")
                     .enqueue(object : Callback<Void> {
                         override fun onResponse(call: Call<Void>, response: Response<Void>) {
                             if (response.isSuccessful) {
                                 Toast.makeText(
                                     this@DetallePedidoActivity,
-                                    "Pedido completado",
+                                    "Pedido finalizado",
                                     Toast.LENGTH_SHORT
                                 ).show()
                             } else {
@@ -155,7 +155,6 @@ class DetallePedidoActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(this, "Cambios aplicados", Toast.LENGTH_SHORT).show()
             }
-
             finish()
         }
 
