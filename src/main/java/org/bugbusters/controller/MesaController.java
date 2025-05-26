@@ -43,4 +43,19 @@ public class MesaController {
         // 3) Devolvemos la Mesa guardada
         return ResponseEntity.ok(mesaGuardada);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> eliminarMesa(@PathVariable Long id) {
+        try {
+            Mesa mesa = mesaRepository.findById(id).orElse(null);
+            if (mesa == null) {
+                return ResponseEntity.notFound().build();
+            }
+
+            mesaRepository.delete(mesa);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error al eliminar la mesa: " + e.getMessage());
+        }
+    }
 }

@@ -2,6 +2,7 @@ package org.bugbusters.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import java.util.List;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,4 +26,7 @@ public class Mesa {
     private Integer capacidad;
 
     private String ubicacion;
+
+    @OneToMany(mappedBy = "mesa", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SesionMesa> sesiones;
 }
