@@ -1,7 +1,7 @@
 let mesaUUID = sessionStorage.getItem("mesaUUID");
 
 function obtenerNumeroMesa(mesaUUID){
-  fetch(`https://bugbustersspring.onrender.com/api/sesiones/${mesaUUID}/mesa-id`)
+  fetch(`https://bugbustersspring.onrender.com/api/sesiones/${mesaUUID}/numero-mesa`)
   .then(res=> res.json())
   .then(id=>{
     const mesa= document.getElementById("numero-mesa");
