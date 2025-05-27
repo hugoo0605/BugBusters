@@ -104,6 +104,7 @@ document.getElementById("confirmar-compra").addEventListener("click", () => {
     estado: "PENDIENTE",
     total: carrito.reduce((sum, item) => sum + item.precio * item.cantidad, 0),
     notas: "",
+    fechaCreacion: new Date(),
     items: carrito.map(item => ({
       productoId: item.id,
       cantidad: item.cantidad,
