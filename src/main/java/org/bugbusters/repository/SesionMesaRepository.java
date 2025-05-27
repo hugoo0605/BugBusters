@@ -13,4 +13,6 @@ public interface SesionMesaRepository extends JpaRepository<SesionMesa, UUID> {
 
     // Nuevo método: encuentra la sesión activa (fechaCierre IS NULL) para una mesa concreta
     Optional<SesionMesa> findByMesaIdAndFechaCierreIsNull(Long mesaId);
+
+
 }
