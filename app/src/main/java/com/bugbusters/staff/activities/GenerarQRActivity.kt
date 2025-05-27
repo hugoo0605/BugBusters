@@ -1,6 +1,7 @@
 package com.bugbusters.staff.activities
 
 import android.annotation.SuppressLint
+import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
@@ -22,6 +23,7 @@ import com.bugbusters.staff.adapters.MesaAdapter
 import com.bugbusters.staff.dto.MesaDTO
 import com.bugbusters.staff.dto.SesionMesaDTO
 import com.bugbusters.staff.network.RetrofitInstance
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.WriterException
 import com.google.zxing.qrcode.QRCodeWriter
@@ -39,6 +41,7 @@ class GenerarQRActivity : AppCompatActivity() {
     private var qrBitmap: Bitmap? = null
     private var sesionUUID: UUID? = null
     private var mesaSeleccionadaId: Long? = null
+    private var isDeleteMode = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,27 +50,67 @@ class GenerarQRActivity : AppCompatActivity() {
         qrImageView = findViewById(R.id.qrImageView)
         rvMesas = findViewById(R.id.recyclerMesas)
         val fabAgregarMesa: View = findViewById(R.id.fabAgregarMesa)
+        val fabEliminarMesa: FloatingActionButton = findViewById(R.id.fabEliminarMesa)
         btnGuardarPdf = findViewById(R.id.btnGuardarPdf)
 
         btnGuardarPdf.visibility = View.GONE
 
         // Configuramos el RecyclerView
         rvMesas.layoutManager = LinearLayoutManager(this)
-        val adapter = MesaAdapter { mesaId ->
-            mesaSeleccionadaId = mesaId
-            obtenerIdSesionYGenerarQR(mesaId)
-        }
-        rvMesas.adapter = adapter
+        lateinit var adapter: MesaAdapter
 
+        adapter = MesaAdapter(
+            onMesaClick = { mesaId ->
+                if (!isDeleteMode) {
+                    mesaSeleccionadaId = mesaId
+                    obtenerIdSesionYGenerarQR(mesaId)
+                }
+            },
+            onDeleteMesa = { mesaId ->
+                eliminarMesa(mesaId, adapter)
+            },
+            isDeleteMode = isDeleteMode
+        )
+        rvMesas.adapter = adapter
         cargarMesas(adapter)
 
         fabAgregarMesa.setOnClickListener {
             crearNuevaMesa(adapter)
         }
+        fabEliminarMesa.setOnClickListener {
+            isDeleteMode = !isDeleteMode
+            adapter.setDeleteMode(isDeleteMode)
+            // Cambiar color del FAB para feedback visual
+            fabEliminarMesa.backgroundTintList = ColorStateList.valueOf(
+                if (isDeleteMode) Color.RED else ContextCompat.getColor(this, R.color.purple_500)
+            )
+        }
 
         btnGuardarPdf.setOnClickListener {
             sesionUUID?.let { uuid ->
                 downloadQRasPdf(uuid)
+            }
+        }
+    }
+
+    private fun eliminarMesa(mesaId: Long, adapter: MesaAdapter) {
+        lifecycleScope.launch {
+            try {
+                val response = RetrofitInstance.mesaApi.eliminarMesa(mesaId)
+                val fabEliminarMesa: FloatingActionButton = findViewById(R.id.fabEliminarMesa)
+                if (response.isSuccessful) {
+                    isDeleteMode = false
+                    adapter.setDeleteMode(false)
+                    cargarMesas(adapter)
+                    fabEliminarMesa.backgroundTintList = ColorStateList.valueOf(
+                        ContextCompat.getColor(this@GenerarQRActivity, R.color.purple_500)
+                    )
+                    Toast.makeText(this@GenerarQRActivity, "Mesa eliminada", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this@GenerarQRActivity, "Error eliminando mesa", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(this@GenerarQRActivity, "Error de red al eliminar mesa", Toast.LENGTH_SHORT).show()
             }
         }
     }
