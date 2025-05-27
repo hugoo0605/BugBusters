@@ -84,6 +84,7 @@ class GenerarQRActivity : AppCompatActivity() {
             fabEliminarMesa.backgroundTintList = ColorStateList.valueOf(
                 if (isDeleteMode) Color.RED else ContextCompat.getColor(this, R.color.purple_500)
             )
+            Toast.makeText(this, if (isDeleteMode) "Modo borrar mesa activado" else "Modo borrar mesa desactivado", Toast.LENGTH_SHORT).show()
         }
 
         btnGuardarPdf.setOnClickListener {
