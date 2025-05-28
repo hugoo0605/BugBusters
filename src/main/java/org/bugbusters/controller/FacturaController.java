@@ -27,9 +27,9 @@ public class FacturaController {
     /**
      * NUEVO: Factura “por mesa” -> agrupa todos los pedidos no finalizados de la sesión activa.
      */
-    @PostMapping("/mesa/{mesaId}")
-    public FacturaDTO generarFacturaPorMesa(@PathVariable Long mesaId) {
-        return facturaService.generarFacturaPorMesa(mesaId);
+    @PostMapping("/mesa/numero/{numeroMesa}")
+    public FacturaDTO generarFacturaPorNumeroMesa(@PathVariable int numeroMesa) {
+        return facturaService.generarFacturaPorNumeroMesa(numeroMesa);
     }
 
     @GetMapping("/pendientes")

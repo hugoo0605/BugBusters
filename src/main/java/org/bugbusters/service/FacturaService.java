@@ -1,14 +1,8 @@
 package org.bugbusters.service;
 
 import org.bugbusters.dto.FacturaDTO;
-import org.bugbusters.entity.Factura;
-import org.bugbusters.entity.FacturaPedido;
-import org.bugbusters.entity.Pedido;
-import org.bugbusters.entity.SesionMesa;
-import org.bugbusters.repository.FacturaPedidoRepository;
-import org.bugbusters.repository.FacturaRepository;
-import org.bugbusters.repository.PedidoRepository;
-import org.bugbusters.repository.SesionMesaRepository;
+import org.bugbusters.entity.*;
+import org.bugbusters.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,15 +19,17 @@ public class FacturaService {
     private final PedidoRepository pedidoRepository;
     private final SesionMesaRepository sesionMesaRepository;
     private final FacturaPedidoRepository facturaPedidoRepository;
+    private final MesaRepository mesaRepository;
 
     public FacturaService(FacturaRepository facturaRepository,
                           PedidoRepository pedidoRepository,
                           SesionMesaRepository sesionMesaRepository,
-                          FacturaPedidoRepository facturaPedidoRepository) {
+                          FacturaPedidoRepository facturaPedidoRepository, MesaRepository mesaRepository) {
         this.facturaRepository = facturaRepository;
         this.pedidoRepository = pedidoRepository;
         this.sesionMesaRepository = sesionMesaRepository;
         this.facturaPedidoRepository = facturaPedidoRepository;
+        this.mesaRepository = mesaRepository;
     }
 
     /**
@@ -75,19 +71,25 @@ public class FacturaService {
      * Nuevo método: generar factura para todos los pedidos 'ABIERTO' de la sesión activa de una mesa.
      */
     @Transactional
-    public FacturaDTO generarFacturaPorMesa(Long mesaId) {
+    public FacturaDTO generarFacturaPorNumeroMesa(int numeroMesa) {
+        // 0) Buscar mesa por su número
+        Mesa mesa = mesaRepository.findByNumero(numeroMesa)
+                .orElseThrow(() -> new RuntimeException("No existe ninguna mesa con número " + numeroMesa));
+
+        Long mesaId = mesa.getId();
+
         // 1) Obtener la sesión activa (fechaCierre IS NULL) de la mesa
         SesionMesa sesionActiva = sesionMesaRepository
                 .findByMesaIdAndFechaCierreIsNull(mesaId)
-                .orElseThrow(() -> new RuntimeException("No hay sesión activa para la mesa con id " + mesaId));
+                .orElseThrow(() -> new RuntimeException("No hay sesión activa para la mesa con número " + numeroMesa));
 
         UUID sesionId = sesionActiva.getId();
 
-        // 2) Buscar únicamente los pedidos con estado "ABIERTO" en esa sesión
+        // 2) Buscar únicamente los pedidos con estado "ENTREGADO" en esa sesión
         List<Pedido> pedidosPendientes = pedidoRepository.findBySesionMesaIdAndEstado(sesionId, "ENTREGADO");
 
         if (pedidosPendientes.isEmpty()) {
-            throw new RuntimeException("No hay pedidos abiertos para facturar en la mesa " + mesaId);
+            throw new RuntimeException("No hay pedidos entregados para facturar en la mesa " + numeroMesa);
         }
 
         // 3) Sumar los totales de cada pedido
@@ -102,7 +104,7 @@ public class FacturaService {
         nuevaFactura.setEstado("NO_PAGADA");
         Factura facturaGuardada = facturaRepository.save(nuevaFactura);
 
-        // 5) Por cada pedido 'ABIERTO', crear entrada en factura_pedido y marcar como 'FINALIZADO'
+        // 5) Por cada pedido 'ENTREGADO', crear entrada en factura_pedido y marcar como 'FINALIZADO'
         List<Long> pedidosIdsFacturados = new ArrayList<>();
         for (Pedido p : pedidosPendientes) {
             FacturaPedido fp = new FacturaPedido();
@@ -126,6 +128,7 @@ public class FacturaService {
 
         return dto;
     }
+
 
     public List<FacturaDTO> listarFacturasPorEstado(String estado) {
         List<Factura> facturas = facturaRepository.findByEstado(estado);
