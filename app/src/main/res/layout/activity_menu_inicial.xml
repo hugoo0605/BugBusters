@@ -1,39 +1,58 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background_gradient"
-    android:gravity="center"
-    android:orientation="vertical"
     android:padding="32dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:text="Menú Principal"
-        android:textColor="#FFFFFF"
-        android:textSize="24sp"
-        android:textStyle="bold" />
+    <!-- Botón cerrar sesión arriba a la derecha -->
+    <ImageButton
+        android:id="@+id/btnCerrarSesion"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Cerrar sesión"
+        android:padding="8dp"
+        android:src="@drawable/ic_power_off" />
 
-    <Button
-        android:id="@+id/btnPedidosActivos"
-        style="@style/FancyMenuButton"
-        android:text="Pedidos Activos" />
+    <LinearLayout
+        android:id="@+id/linearContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/btnCerrarSesion"
+        android:gravity="center"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/btnGenerarQR"
-        style="@style/FancyMenuButton"
-        android:text="MESAS" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:text="Menú Principal"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
-    <Button
-        android:id="@+id/btnGenerarCuentas"
-        style="@style/FancyMenuButton"
-        android:text="Generar Cuentas" />
+        <Button
+            android:id="@+id/btnPedidosActivos"
+            style="@style/FancyMenuButton"
+            android:text="Pedidos Activos" />
 
-    <!-- NUEVO: Botón para abrir Facturas Pendientes -->
-    <Button
-        android:id="@+id/btnFacturasPendientes"
-        style="@style/FancyMenuButton"
-        android:text="Facturas Pendientes" />
-</LinearLayout>
+        <Button
+            android:id="@+id/btnGenerarQR"
+            style="@style/FancyMenuButton"
+            android:text="MESAS" />
+
+        <Button
+            android:id="@+id/btnGenerarCuentas"
+            style="@style/FancyMenuButton"
+            android:text="Generar Cuentas" />
+
+        <Button
+            android:id="@+id/btnFacturasPendientes"
+            style="@style/FancyMenuButton"
+            android:text="Facturas Pendientes" />
+
+    </LinearLayout>
+
+</RelativeLayout>

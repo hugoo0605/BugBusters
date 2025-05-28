@@ -4,6 +4,7 @@ package com.bugbusters.staff.activities
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import com.bugbusters.staff.R
 
@@ -17,6 +18,7 @@ class MenuInicial : AppCompatActivity() {
         val btnGenerarQR = findViewById<Button>(R.id.btnGenerarQR)
         val btnGenerarCuentas = findViewById<Button>(R.id.btnGenerarCuentas)
         val btnFacturasPendientes = findViewById<Button>(R.id.btnFacturasPendientes)
+        val btnCerrarSesion = findViewById<ImageButton>(R.id.btnCerrarSesion)
 
         btnPedidosActivos.setOnClickListener {
             startActivity(Intent(this, PedidosActivosActivity::class.java))
@@ -32,6 +34,16 @@ class MenuInicial : AppCompatActivity() {
 
         btnFacturasPendientes.setOnClickListener {
             startActivity(Intent(this, FacturasPendientesActivity::class.java))
+        }
+
+        btnCerrarSesion.setOnClickListener {
+            val prefs = getSharedPreferences("bugbusters_prefs", MODE_PRIVATE)
+            prefs.edit().clear().apply()
+
+            val intent = Intent(this, LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+            finish()
         }
     }
 }

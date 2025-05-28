@@ -2,6 +2,7 @@ package com.bugbusters.staff.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.CheckBox
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bugbusters.staff.R
@@ -19,6 +20,7 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
     private lateinit var authApi: AuthApi
+    private lateinit var rememberMeCheckBox: CheckBox
 
     //Boolean para el ojo de la contraseña
     private var isPasswordVisible = false
@@ -26,6 +28,16 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val prefs = getSharedPreferences("bugbusters_prefs", MODE_PRIVATE)
+        val userId = prefs.getLong("user_id", -1L)
+        if (userId != -1L) {
+            val intent = Intent(this, MenuInicial::class.java)
+            startActivity(intent)
+            finish()
+            return
+        }
+
+        // Si no hay sesión guardada configyra UI normalmente
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -37,6 +49,7 @@ class LoginActivity : AppCompatActivity() {
             .build()
 
         authApi = retrofit.create(AuthApi::class.java)
+        rememberMeCheckBox = binding.rememberMeCheckBox
 
         setupUI()
     }
@@ -81,6 +94,15 @@ class LoginActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     val trabajador = response.body()
                     if (trabajador != null) {
+                        if (rememberMeCheckBox.isChecked) {
+                            val prefs = getSharedPreferences("bugbusters_prefs", MODE_PRIVATE)
+                            with(prefs.edit()) {
+                                putLong("user_id", trabajador.id)
+                                putString("user_name", trabajador.nombre)
+                                putString("user_email", trabajador.email)
+                                apply()
+                            }
+                        }
                         Toast.makeText(
                             this@LoginActivity,
                             "Bienvenido, ${trabajador.nombre}",
