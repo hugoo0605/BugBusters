@@ -11,9 +11,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/card_background"
         android:orientation="vertical"
-        android:padding="12dp">
+        android:padding="12dp"
+        android:background="@color/fondo_tarjeta">
 
         <TextView
             android:id="@+id/tvNombreProducto"
@@ -21,34 +21,41 @@
             android:layout_height="wrap_content"
             android:text="Producto"
             android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textColor="@color/texto_tarjeta" />
 
         <TextView
             android:id="@+id/tvCantidad"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Cantidad"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textColor="@color/texto_tarjeta" />
 
         <TextView
             android:id="@+id/tvPrecio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Precio"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textColor="@color/texto_tarjeta" />
 
         <TextView
             android:id="@+id/tvEstadoActual"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Estado actual"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textColor="@color/texto_tarjeta" />
 
         <Spinner
             android:id="@+id/spinnerEstado"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp" />
+            android:layout_marginTop="4dp"
+            android:popupBackground="@color/fondo_tarjeta"
+            android:theme="@style/SpinnerLightTheme"
+            android:backgroundTint="@color/texto_tarjeta" />
 
     </LinearLayout>
 

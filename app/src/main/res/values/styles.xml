@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <style name="FancyMenuButton" parent="Widget.MaterialComponents.Button">
@@ -6,9 +5,14 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginBottom">16dp</item>
         <item name="android:background">@drawable/bg_menu_button</item>
-        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
         <item name="android:textSize">18sp</item>
         <item name="android:paddingVertical">14dp</item>
+    </style>
+
+    <style name="SpinnerLightTheme" parent="Theme.AppCompat.Light">
+        <item name="android:textColor">@color/texto_tarjeta</item>
+        <item name="android:background">@color/fondo_tarjeta</item>
     </style>
 
 </resources>
