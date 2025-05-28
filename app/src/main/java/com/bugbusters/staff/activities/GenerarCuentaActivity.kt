@@ -30,19 +30,19 @@ class GenerarCuentaActivity : AppCompatActivity() {
         facturaResultado = findViewById(R.id.facturaResultado)
 
         generarFacturaBtn.setOnClickListener {
-            val mesaId = inputMesaId.text.toString().toLongOrNull()
-            if (mesaId != null) {
-                generarFacturaParaMesa(mesaId)
+            val numeroMesa = inputMesaId.text.toString().toIntOrNull()
+            if (numeroMesa != null) {
+                generarFacturaParaMesa(numeroMesa)
             } else {
                 facturaResultado.text = "ID de mesa inválido"
             }
         }
     }
 
-    private fun generarFacturaParaMesa(mesaId: Long) {
+    private fun generarFacturaParaMesa(numeroMesa: Int) {
         lifecycleScope.launch {
             try {
-                val response = RetrofitInstance.facturaApi.generarFacturaPorMesa(mesaId)
+                val response = RetrofitInstance.facturaApi.generarFacturaPorNumeroMesa(numeroMesa)
                 if (response.isSuccessful) {
                     response.body()?.let { factura ->
                         mostrarFactura(factura)

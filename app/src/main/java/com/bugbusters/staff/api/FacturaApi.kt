@@ -13,9 +13,9 @@ interface FacturaApi {
         @Path("pedidoId") pedidoId: Long
     ): Response<FacturaDTO>
 
-    @POST("/api/facturas/mesa/{mesaId}")
-    suspend fun generarFacturaPorMesa(
-        @Path("mesaId") mesaId: Long
+    @POST("/api/facturas/mesa/numero/{numeroMesa}")
+    suspend fun generarFacturaPorNumeroMesa(
+        @Path("numeroMesa") numeroMesa: Int
     ): Response<FacturaDTO>
 
     @GET("/api/facturas/pendientes")

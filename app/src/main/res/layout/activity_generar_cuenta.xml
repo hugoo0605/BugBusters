@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:background="@drawable/edittext_background"
-        android:hint="ID de la Mesa"
+        android:hint="Numero de la Mesa"
         android:inputType="number"
         android:padding="12dp"
         android:textColor="#999999"
