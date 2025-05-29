@@ -13,8 +13,10 @@
         android:layout_alignParentEnd="true"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="Cerrar sesión"
-        android:padding="8dp"
-        android:src="@drawable/ic_power_off" />
+        android:scaleType="centerInside"
+        android:adjustViewBounds="true"
+        android:src="@drawable/poder" />
+
 
     <LinearLayout
         android:id="@+id/linearContent"
