@@ -18,7 +18,7 @@ public class ItemPedido {
     private String estado;
     private String notas;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "pedido_id")
     private Pedido pedido;
 

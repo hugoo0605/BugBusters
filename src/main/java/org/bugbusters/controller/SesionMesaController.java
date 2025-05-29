@@ -85,11 +85,11 @@ public class SesionMesaController {
     }
 
     @GetMapping("{uuid}/numero-mesa")
-    public ResponseEntity<Integer> obtenerNumeroMesa(@PathVariable UUID uuid){
+    public ResponseEntity<Integer> obtenerNumeroMesa(@PathVariable UUID uuid) {
         Optional<SesionMesa> sesionOpt = sesionMesaRepository.findById(uuid);
-        if(sesionOpt.isPresent()){
+        if (sesionOpt.isPresent()) {
             Mesa mesa = sesionOpt.get().getMesa();
-            if(mesa!=null){
+            if (mesa != null) {
                 return ResponseEntity.ok(mesa.getNumero());
             }
         }

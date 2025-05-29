@@ -3,8 +3,9 @@ package org.bugbusters.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import java.util.List;
 import lombok.Data;
+
+import java.util.List;
 
 @Entity
 @Table(name = "mesas")
@@ -16,11 +17,8 @@ public class Mesa {
     private Long id;
 
     private Integer numero;
-
-    private String estado; // LIBRE, OCUPADA, etc.
-
+    private String estado;
     private Integer capacidad;
-
     private String ubicacion;
 
     @OneToMany(mappedBy = "mesa", cascade = CascadeType.ALL, orphanRemoval = true)
