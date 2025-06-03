@@ -84,6 +84,10 @@ class LoginActivity : AppCompatActivity() {
             binding.passwordEditText.setSelection(binding.passwordEditText.text.length)
             isPasswordVisible = !isPasswordVisible
         }
+        binding.goToRegisterText.setOnClickListener {
+            val intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun login(email: String, password: String) {
