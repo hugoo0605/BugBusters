@@ -74,7 +74,7 @@ function añadirAlCarrito(producto) {
   if (existente) {
     existente.cantidad += 1;
   } else {
-    carrito.push({ ...producto, cantidad: 1 });
+    carrito.push({ ...producto, cantidad: 1, notas:"" });
   }
   guardarCarrito(carrito);
   actualizarContadorCarrito();

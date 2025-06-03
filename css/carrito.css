@@ -146,7 +146,7 @@ header {
     justify-content: space-between; 
 }
 
-.btn-menos, .btn-mas {
+.btn-menos, .btn-mas, .btn-notas {
     margin-top: 5px; 
     background-color: #ffffff; 
     border: none; 
@@ -157,6 +157,20 @@ header {
     border-radius: 6px; 
     cursor: pointer; 
     transition: background-color 0.2s ease; 
+}
+
+.btn-notas{
+    font-weight: 600;
+    margin-right: 40px;
+}
+
+.notas-textarea{
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 0px;
+    padding: 4px;
+    resize: none;
+    min-height: 40px;
 }
 
 .icono1{

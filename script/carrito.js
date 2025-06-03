@@ -110,7 +110,7 @@ document.getElementById("confirmar-compra").addEventListener("click", () => {
       cantidad: item.cantidad,
       precioUnitario: item.precio,
       estado: "PENDIENTE",
-      notas: ""
+      notas: item.notas || ""
     }))
   };
 
@@ -150,6 +150,7 @@ carrito.forEach(producto => {
       <div class="texto-plato">
         <div class="nombre-plato">${producto.nombre}</div>
         <div class="precio">${producto.precio.toFixed(2)}€</div>
+        <button class="btn-notas" title="Añadir notas">📝</button>
       </div>
       <img class="imagen-plato" src="${producto.imagenes}" alt="${producto.nombre}">
     </div>
@@ -157,11 +158,32 @@ carrito.forEach(producto => {
       <button class="btn-menos">−</button>
       <button class="btn-mas">+</button>
     </div>
+    <textarea class="notas-textarea" placeholder="Escribe una nota..." style="display:none"></textarea>
   `;
 
   const contadorSpan = divPlato.querySelector(".contador");
   const btnMas = divPlato.querySelector(".btn-mas");
   const btnMenos = divPlato.querySelector(".btn-menos");
+  const btnNotas = divPlato.querySelector(".btn-notas");
+  const textareaNotas = divPlato.querySelector(".notas-textarea");
+
+  const itemEnCarrito = carrito.find(item => item.id === producto.id);
+  if (itemEnCarrito && itemEnCarrito.notas) {
+    textareaNotas.value = itemEnCarrito.notas;
+  }
+
+  btnNotas.addEventListener("click", () => {
+    textareaNotas.style.display = textareaNotas.style.display === "none" ? "block" : "none";
+  });
+  
+  textareaNotas.addEventListener("input", () => {
+    const carritoActual = obtenerCarrito();
+    const item = carritoActual.find(i => i.id === producto.id);
+    if (item) {
+      item.notas = textareaNotas.value.trim();
+      guardarCarrito(carritoActual);
+    }
+  });
 
   btnMas.addEventListener("click", () => {
     añadirAlCarrito(producto);
@@ -180,6 +202,15 @@ carrito.forEach(producto => {
   });
 
   contenedor.appendChild(divPlato);
+});
+
+const textareas = document.querySelectorAll('textarea');
+
+textareas.forEach(textarea => {
+  textarea.addEventListener('input', () => {
+    textarea.style.height = 'auto';
+    textarea.style.height = textarea.scrollHeight + 'px';
+  });
 });
 
 document.addEventListener("DOMContentLoaded", () => {
