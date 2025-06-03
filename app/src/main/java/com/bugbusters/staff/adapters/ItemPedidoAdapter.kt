@@ -27,12 +27,12 @@ class ItemPedidoAdapter(
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val item = items[position]
         val context = holder.binding.root.context
-
+        val notaMostrada = if (item.notas.isNullOrBlank()) "Sin notas" else item.notas
         holder.binding.tvNombreProducto.text = item.nombreProducto
         holder.binding.tvCantidad.text = "Cantidad: ${item.cantidad}"
         holder.binding.tvPrecio.text = "Precio: ${item.precioUnitario}€"
         holder.binding.tvEstadoActual.text = "Estado actual: ${item.estado}"
-
+        holder.binding.tvNota.text = "Nota: $notaMostrada"
         val spinnerAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, estados)
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         holder.binding.spinnerEstado.adapter = spinnerAdapter
