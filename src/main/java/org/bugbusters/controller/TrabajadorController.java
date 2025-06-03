@@ -2,9 +2,9 @@ package org.bugbusters.controller;
 
 import org.bugbusters.entity.Trabajador;
 import org.bugbusters.repository.TrabajadorRepository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,5 +21,14 @@ public class TrabajadorController {
     @GetMapping
     public List<Trabajador> listarTrabajadores() {
         return trabajadorRepository.findAll();
+    }
+
+    @PostMapping("/registro")
+    public ResponseEntity<String> registrarTrabajador(@RequestBody Trabajador trabajador) {
+        if (trabajadorRepository.existsByEmail(trabajador.getEmail())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email ya registrado.");
+        }
+        trabajadorRepository.save(trabajador);
+        return ResponseEntity.ok("Usuario registrado con éxito");
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 
@@ -46,6 +47,38 @@ public class AuthController {
         }
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Credenciales incorrectas"));
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody Map<String, String> registerRequest) {
+        String dni = registerRequest.get("dni");
+        String nombre = registerRequest.get("nombre");
+        String email = registerRequest.get("email");
+        String password = registerRequest.get("password");
+        String rol = registerRequest.getOrDefault("rol", "empleado");
+
+        if (trabajadorRepository.findByEmail(email).isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("message", "Ya existe un usuario con ese email"));
+        }
+
+        Trabajador nuevo = new Trabajador();
+        nuevo.setDni(dni);
+        nuevo.setNombre(nombre);
+        nuevo.setEmail(email);
+        nuevo.setPassword(passwordEncoder.encode(password));
+        nuevo.setRol(rol);
+        nuevo.setActivo(true);
+        nuevo.setFechaCreacion(LocalDateTime.now());
+
+        trabajadorRepository.save(nuevo);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
+                "message", "Usuario registrado correctamente",
+                "id", nuevo.getId(),
+                "nombre", nuevo.getNombre(),
+                "email", nuevo.getEmail()
+        ));
     }
 }
 
