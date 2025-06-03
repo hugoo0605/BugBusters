@@ -86,7 +86,7 @@ public class PedidoController {
                 item.setCantidad(itemDTO.getCantidad());
                 item.setPrecioUnitario(itemDTO.getPrecioUnitario());
                 item.setEstado("PENDIENTE");
-                item.setNotas(null); // o lo que tengas
+                item.setNotas(itemDTO.getNotas());
                 itemPedidoRepository.save(item);
             }
 
