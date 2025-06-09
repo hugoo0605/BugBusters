@@ -15,6 +15,10 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+/**
+ * Controlador que gestiona todo lo relacionado con los pedidos del sistema.
+ * Permite crear pedidos, obtenerlos, actualizarlos y añadir items.
+ */
 @RestController
 @RequestMapping("/api/pedidos")
 public class PedidoController {
@@ -29,7 +33,11 @@ public class PedidoController {
 
     public PedidoController(PedidoRepository pedidoRepository,
                             SesionMesaRepository sesionMesaRepository,
-                            TrabajadorRepository trabajadorRepository, ProductoRepository productoRepository, ItemPedidoRepository itemPedidoRepository, PedidoService pedidoService, PedidoNotificacionService pedidoNotificacionService) {
+                            TrabajadorRepository trabajadorRepository,
+                            ProductoRepository productoRepository,
+                            ItemPedidoRepository itemPedidoRepository,
+                            PedidoService pedidoService,
+                            PedidoNotificacionService pedidoNotificacionService) {
         this.pedidoRepository = pedidoRepository;
         this.sesionMesaRepository = sesionMesaRepository;
         this.trabajadorRepository = trabajadorRepository;
@@ -39,6 +47,11 @@ public class PedidoController {
         this.pedidoNotificacionService = pedidoNotificacionService;
     }
 
+    /**
+     * Devuelve una lista de pedidos que están activos (pendiente, en preparación o listos).
+     *
+     * @return lista de pedidos activos.
+     */
     @GetMapping("/activos")
     public List<PedidoResponseDTO> obtenerPedidosActivos() {
         return pedidoRepository.findByEstadoIn(List.of("PENDIENTE", "PREPARACION", "LISTO"))
@@ -47,22 +60,25 @@ public class PedidoController {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Crea un nuevo pedido y sus items.
+     *
+     * @param pedidoDTO datos del pedido a crear.
+     * @return mensaje de éxito o error.
+     */
     @PostMapping
     public ResponseEntity<String> crearPedido(@RequestBody PedidoDTO pedidoDTO) {
         try {
-            // Obtener la sesiÃ³n correspondiente al UUID
             Optional<SesionMesa> sesionMesaOpt = sesionMesaRepository.findById(pedidoDTO.getSesionId());
             if (sesionMesaOpt.isEmpty()) {
                 throw new RuntimeException("Sesion no encontrada");
             }
 
-            // Obtener el trabajador correspondiente
             Optional<Trabajador> trabajadorOpt = trabajadorRepository.findById(pedidoDTO.getTrabajadorId());
             if (trabajadorOpt.isEmpty()) {
                 throw new RuntimeException("Trabajador no encontrado");
             }
 
-            // Crear el objeto Pedido y asignar las relaciones
             Pedido pedido = new Pedido();
             pedido.setEstado(pedidoDTO.getEstado());
             pedido.setFechaCreacion(pedidoDTO.getFechaCreacion());
@@ -71,9 +87,8 @@ public class PedidoController {
             pedido.setSesionMesa(sesionMesaOpt.get());
             pedido.setTrabajador(trabajadorOpt.get());
 
-            pedido = pedidoRepository.save(pedido); // ahora tienes el ID del pedido
+            pedido = pedidoRepository.save(pedido);
 
-            // Guardar los items
             for (ItemPedidoDTO itemDTO : pedidoDTO.getItems()) {
                 Optional<Producto> productoOpt = productoRepository.findById(itemDTO.getProductoId());
                 if (productoOpt.isEmpty()) {
@@ -97,7 +112,11 @@ public class PedidoController {
         }
     }
 
-    // Obtener todos los pedidos
+    /**
+     * Devuelve todos los pedidos registrados en el sistema.
+     *
+     * @return lista de todos los pedidos.
+     */
     @GetMapping
     public List<PedidoResponseDTO> listarPedidos() {
         return pedidoRepository.findAll()
@@ -106,7 +125,13 @@ public class PedidoController {
                 .collect(Collectors.toList());
     }
 
-    // Actualizar estado de un pedido
+    /**
+     * Actualiza el estado de un pedido concreto.
+     *
+     * @param id     ID del pedido.
+     * @param estado nuevo estado a asignar.
+     * @return el pedido actualizado.
+     */
     @PutMapping("/{id}")
     public Pedido actualizarEstadoPedido(@PathVariable Long id, @RequestParam String estado) {
         Pedido pedidoExistente = pedidoRepository.findById(id)
@@ -115,7 +140,12 @@ public class PedidoController {
         return pedidoRepository.save(pedidoExistente);
     }
 
-    // Obtener pedidos por estado
+    /**
+     * Lista los pedidos filtrados por su estado.
+     *
+     * @param estado estado a buscar (ej. "PENDIENTE").
+     * @return lista de pedidos con ese estado.
+     */
     @GetMapping("/estado/{estado}")
     public List<PedidoResponseDTO> listarPedidosPorEstado(@PathVariable String estado) {
         return pedidoRepository.findByEstado(estado)
@@ -124,6 +154,12 @@ public class PedidoController {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Obtiene todos los items de un pedido específico.
+     *
+     * @param id ID del pedido.
+     * @return lista de items que contiene ese pedido.
+     */
     @GetMapping("/{id}/items")
     public List<ItemPedidoDTO> obtenerItemsDePedido(@PathVariable Long id) {
         Pedido pedido = pedidoRepository.findById(id)
@@ -134,6 +170,12 @@ public class PedidoController {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Devuelve la información completa de un pedido según su ID.
+     *
+     * @param id ID del pedido.
+     * @return DTO con los datos del pedido.
+     */
     @GetMapping("/{id}")
     public PedidoResponseDTO obtenerPedidoPorId(@PathVariable Long id) {
         Pedido pedido = pedidoRepository.findById(id)
@@ -141,9 +183,16 @@ public class PedidoController {
         return new PedidoResponseDTO(pedido);
     }
 
+    /**
+     * Añade un nuevo item a un pedido existente y notifica a la mesa asociada.
+     *
+     * @param pedidoId ID del pedido.
+     * @param item     datos del item a añadir.
+     * @return el pedido actualizado.
+     */
     @PostMapping("/{id}/items")
-    public ResponseEntity<?> añadirItem(@PathVariable Long pedidoId, @RequestBody ItemPedidoDTO item) {
-        Pedido pedidoActualizado = pedidoService.añadirItem(pedidoId, item);
+    public ResponseEntity<?> anadirItem(@PathVariable Long pedidoId, @RequestBody ItemPedidoDTO item) {
+        Pedido pedidoActualizado = pedidoService.anadirItem(pedidoId, item);
 
         UUID mesaUUID = pedidoActualizado.getSesionMesa().getId();
         pedidoNotificacionService.notificarCambioEnMesa(mesaUUID, pedidoActualizado);

@@ -12,6 +12,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Controlador que gestiona las mesas del restaurante.
+ * Permite listar, crear (junto con su sesión) y eliminar mesas.
+ */
 @RestController
 @RequestMapping("/api/mesas")
 @CrossOrigin(origins = "*")
@@ -23,11 +27,22 @@ public class MesaController {
     @Autowired
     private SesionMesaRepository sesionMesaRepository;
 
+    /**
+     * Obtiene la lista de todas las mesas registradas.
+     *
+     * @return lista de mesas.
+     */
     @GetMapping
     public List<Mesa> getMesas() {
         return mesaRepository.findAll();
     }
 
+    /**
+     * Crea una nueva mesa y genera automáticamente una sesión asociada a ella.
+     *
+     * @param mesa objeto Mesa con los datos enviados desde el cliente.
+     * @return la mesa creada.
+     */
     @PostMapping
     public ResponseEntity<Mesa> crearMesaYSesion(@RequestBody Mesa mesa) {
         // 1) Guardamos la Mesa
@@ -44,6 +59,12 @@ public class MesaController {
         return ResponseEntity.ok(mesaGuardada);
     }
 
+    /**
+     * Elimina una mesa por su ID si existe.
+     *
+     * @param id ID de la mesa a eliminar.
+     * @return respuesta indicando éxito o error.
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminarMesa(@PathVariable Long id) {
         try {

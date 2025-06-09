@@ -14,6 +14,9 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * Controlador para el inicio de sesión y el registro de nuevos trabajadores.
+ */
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -21,11 +24,24 @@ public class AuthController {
     private final TrabajadorRepository trabajadorRepository;
     private final PasswordEncoder passwordEncoder;
 
+    /**
+     * Constructor que inyecta las dependencias necesarias para la autenticación.
+     *
+     * @param trabajadorRepository Repositorio para acceder a los datos de los trabajadores.
+     * @param passwordEncoder      Codificador de contraseñas para cifrado y verificación segura.
+     */
     public AuthController(TrabajadorRepository trabajadorRepository, PasswordEncoder passwordEncoder) {
         this.trabajadorRepository = trabajadorRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * Endpoint para iniciar sesión.
+     * Verifica las credenciales proporcionadas por el usuario y devuelve datos básicos si son correctas.
+     *
+     * @param loginRequest Mapa con las claves "email" y "password".
+     * @return ResponseEntity con mensaje de éxito y datos del trabajador, o error si las credenciales son incorrectas.
+     */
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> loginRequest) {
         String email = loginRequest.get("email");
@@ -36,7 +52,6 @@ public class AuthController {
         if (trabajadorOpt.isPresent()) {
             Trabajador trabajador = trabajadorOpt.get();
             if (passwordEncoder.matches(password, trabajador.getPassword())) {
-                // Aquí podrías generar un token JWT o devolver los datos básicos
                 return ResponseEntity.ok(Map.of(
                         "message", "Login correcto",
                         "rol", trabajador.getRol(),
@@ -49,6 +64,13 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Credenciales incorrectas"));
     }
 
+    /**
+     * Endpoint para registrar un nuevo trabajador.
+     * Crea un nuevo usuario si el email no está ya registrado.
+     *
+     * @param registerRequest Mapa con las claves dni, nombre, email, password y rol.
+     * @return ResponseEntity con mensaje de éxito y datos del nuevo usuario, o error si ya existe un usuario con ese email.
+     */
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody Map<String, String> registerRequest) {
         String dni = registerRequest.get("dni");
@@ -81,4 +103,3 @@ public class AuthController {
         ));
     }
 }
-

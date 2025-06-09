@@ -12,6 +12,10 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+/**
+ * Servicio para manejar facturas y su relación con pedidos y sesiones de mesas.
+ * Permite generar facturas, listar por estado y marcar facturas como pagadas.
+ */
 @Service
 public class FacturaService {
 
@@ -24,7 +28,8 @@ public class FacturaService {
     public FacturaService(FacturaRepository facturaRepository,
                           PedidoRepository pedidoRepository,
                           SesionMesaRepository sesionMesaRepository,
-                          FacturaPedidoRepository facturaPedidoRepository, MesaRepository mesaRepository) {
+                          FacturaPedidoRepository facturaPedidoRepository,
+                          MesaRepository mesaRepository) {
         this.facturaRepository = facturaRepository;
         this.pedidoRepository = pedidoRepository;
         this.sesionMesaRepository = sesionMesaRepository;
@@ -33,7 +38,11 @@ public class FacturaService {
     }
 
     /**
-     * Método existente (facturar un único pedido). Se deja si aún lo quieres conservar.
+     * Genera una factura para un pedido dado.
+     * Cambia el estado del pedido a FINALIZADO.
+     *
+     * @param pedidoId id del pedido a facturar
+     * @return datos de la factura creada
      */
     public FacturaDTO generarFactura(Long pedidoId) {
         Pedido pedido = pedidoRepository.findById(pedidoId)
@@ -68,43 +77,48 @@ public class FacturaService {
     }
 
     /**
-     * Nuevo método: generar factura para todos los pedidos 'ABIERTO' de la sesión activa de una mesa.
+     * Genera una factura para todos los pedidos entregados
+     * de la sesión activa de una mesa (por número).
+     * Cambia el estado de esos pedidos a FINALIZADO.
+     *
+     * @param numeroMesa número de la mesa
+     * @return datos de la factura creada con todos los pedidos
      */
     @Transactional
     public FacturaDTO generarFacturaPorNumeroMesa(int numeroMesa) {
-        // 0) Buscar mesa por su número
+        // Buscar la mesa por número
         Mesa mesa = mesaRepository.findByNumero(numeroMesa)
                 .orElseThrow(() -> new RuntimeException("No existe ninguna mesa con número " + numeroMesa));
 
         Long mesaId = mesa.getId();
 
-        // 1) Obtener la sesión activa (fechaCierre IS NULL) de la mesa
+        // Obtener la sesión activa (sin fecha de cierre) de la mesa
         SesionMesa sesionActiva = sesionMesaRepository
                 .findByMesaIdAndFechaCierreIsNull(mesaId)
                 .orElseThrow(() -> new RuntimeException("No hay sesión activa para la mesa con número " + numeroMesa));
 
         UUID sesionId = sesionActiva.getId();
 
-        // 2) Buscar únicamente los pedidos con estado "ENTREGADO" en esa sesión
+        // Buscar pedidos con estado "ENTREGADO" en esa sesión
         List<Pedido> pedidosPendientes = pedidoRepository.findBySesionMesaIdAndEstado(sesionId, "ENTREGADO");
 
         if (pedidosPendientes.isEmpty()) {
             throw new RuntimeException("No hay pedidos entregados para facturar en la mesa " + numeroMesa);
         }
 
-        // 3) Sumar los totales de cada pedido
+        // Sumar el total de los pedidos
         double montoTotalAcumulado = pedidosPendientes.stream()
                 .mapToDouble(Pedido::getTotal)
                 .sum();
 
-        // 4) Crear y guardar la nueva Factura
+        // Crear y guardar la factura
         Factura nuevaFactura = new Factura();
         nuevaFactura.setTotal(montoTotalAcumulado);
         nuevaFactura.setFecha(LocalDateTime.now());
         nuevaFactura.setEstado("NO_PAGADA");
         Factura facturaGuardada = facturaRepository.save(nuevaFactura);
 
-        // 5) Por cada pedido 'ENTREGADO', crear entrada en factura_pedido y marcar como 'FINALIZADO'
+        // Crear relación factura-pedido y marcar pedidos como FINALIZADO
         List<Long> pedidosIdsFacturados = new ArrayList<>();
         for (Pedido p : pedidosPendientes) {
             FacturaPedido fp = new FacturaPedido();
@@ -118,7 +132,7 @@ public class FacturaService {
             pedidosIdsFacturados.add(p.getId());
         }
 
-        // 6) Construir y devolver el DTO resultante
+        // Construir DTO con datos de la factura
         FacturaDTO dto = new FacturaDTO();
         dto.setId(facturaGuardada.getId());
         dto.setTotal(facturaGuardada.getTotal());
@@ -129,7 +143,12 @@ public class FacturaService {
         return dto;
     }
 
-
+    /**
+     * Lista todas las facturas que tienen un estado específico.
+     *
+     * @param estado estado para filtrar (ejemplo: "PAGADA")
+     * @return lista de facturas con ese estado
+     */
     public List<FacturaDTO> listarFacturasPorEstado(String estado) {
         List<Factura> facturas = facturaRepository.findByEstado(estado);
         return facturas.stream().map(f -> {
@@ -138,7 +157,7 @@ public class FacturaService {
             dto.setTotal(f.getTotal());
             dto.setFecha(f.getFecha());
             dto.setEstado(f.getEstado());
-            // Si quieres, puedes cargar los pedidos asociados y pasarlos:
+            // Cargar pedidos asociados
             List<Long> pedidosIds = f.getFacturasPedidos().stream()
                     .map(fp -> fp.getPedido().getId())
                     .collect(Collectors.toList());
@@ -147,6 +166,11 @@ public class FacturaService {
         }).collect(Collectors.toList());
     }
 
+    /**
+     * Marca una factura como PAGADA.
+     *
+     * @param facturaId id de la factura a actualizar
+     */
     @Transactional
     public void marcarFacturaPagada(Long facturaId) {
         Factura f = facturaRepository.findById(facturaId)

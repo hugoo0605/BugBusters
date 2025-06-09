@@ -12,19 +12,34 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Servicio para gestionar operaciones relacionadas con pedidos.
+ */
 @Service
 public class PedidoService {
+
     @Autowired
     private PedidoRepository pedidoRepository;
+
     @Autowired
     private ItemPedidoRepository itemPedidoRepository;
+
     @Autowired
     private ProductoRepository productoRepository;
+
     @Autowired
     private MesaRepository mesaRepository;
 
+    /**
+     * Añade un nuevo item a un pedido existente.
+     *
+     * @param pedidoId id del pedido al que se añadirá el item
+     * @param itemDTO datos del item a añadir (producto y cantidad)
+     * @return el pedido actualizado con el nuevo item
+     * @throws RuntimeException si el pedido o el producto no existen
+     */
     @Transactional
-    public Pedido añadirItem(Long pedidoId, ItemPedidoDTO itemDTO) {
+    public Pedido anadirItem(Long pedidoId, ItemPedidoDTO itemDTO) {
         Pedido pedido = pedidoRepository.findById(pedidoId)
                 .orElseThrow(() -> new RuntimeException("Pedido no encontrado"));
 
@@ -42,5 +57,4 @@ public class PedidoService {
         pedido.getItems().add(item);
         return pedidoRepository.save(pedido);
     }
-
 }

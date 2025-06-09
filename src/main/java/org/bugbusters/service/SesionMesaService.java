@@ -8,14 +8,21 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * Servicio temporal para gestionar sesiones de mesa en memoria (sin base de datos).
+ */
 @Service
 public class SesionMesaService {
 
     private final Map<String, SesionMesa> sesiones = new HashMap<>();
 
-    // Crear una nueva sesión
+    /**
+     * Crea una nueva sesión para una mesa dada.
+     *
+     * @param mesa la mesa para la que se crea la sesión
+     * @return la nueva sesión creada
+     */
     public SesionMesa crearSesionMesa(Mesa mesa) {
-        // Crear una nueva sesión para la mesa
         String idSesion = UUID.randomUUID().toString();
         SesionMesa nuevaSesion = new SesionMesa();
         nuevaSesion.setId(UUID.fromString(idSesion));
@@ -24,15 +31,24 @@ public class SesionMesaService {
         return nuevaSesion;
     }
 
-    // Obtener una sesión de mesa
+    /**
+     * Obtiene una sesión de mesa según su ID.
+     *
+     * @param idSesion el ID de la sesión
+     * @return la sesión si existe, o null si no
+     */
     public SesionMesa obtenerSesionMesa(String idSesion) {
         return sesiones.get(idSesion);
     }
 
-    // Cerrar una sesión de mesa
+    /**
+     * Cierra (elimina) una sesión de mesa.
+     *
+     * @param idSesion el ID de la sesión a cerrar
+     * @return true si se eliminó correctamente, false si no existía
+     */
     public boolean cerrarSesionMesa(String idSesion) {
         SesionMesa sesion = sesiones.remove(idSesion);
         return sesion != null;
     }
 }
-
