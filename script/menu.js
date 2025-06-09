@@ -165,7 +165,6 @@ function mostrarProductos(categoriaSeleccionada = "TODOS") {
     });
 }
 
-// Modal
 const modal = document.getElementById('modal');
 const modalImg = document.getElementById('modal-img');
 const modalName = document.getElementById('modal-name');
@@ -181,7 +180,6 @@ modal.addEventListener('click', (e) => {
   }
 });
 
-// Mostrar categorías y manejar clics
 fetch("https://bugbustersspring.onrender.com/api/productos/categorias")
   .then(res => res.json())
   .then(categorias => {
@@ -209,7 +207,6 @@ fetch("https://bugbustersspring.onrender.com/api/productos/categorias")
     });
   });
 
-// Mostrar productos al cargar y al volver desde historial
 document.addEventListener("DOMContentLoaded", () => {
   mesaUUID = obtenerMesaDesdeURLoSession();
   mostrarProductos("TODOS");
@@ -242,7 +239,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-// Si vuelves a esta página desde el historial (botón atrás del navegador)
 window.addEventListener("pageshow", (event) => {
   if (event.persisted || performance.getEntriesByType("navigation")[0].type === "back_forward") {
     mostrarProductos("TODOS");

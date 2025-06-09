@@ -136,7 +136,6 @@ document.getElementById("confirmar-compra").addEventListener("click", () => {
   });
 });
 
-// Mostrar productos en el carrito
 const carrito = obtenerCarrito();
 carrito.forEach(producto => {
   const divPlato = document.createElement("div");

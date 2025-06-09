@@ -26,7 +26,6 @@ const historial = JSON.parse(localStorage.getItem(`historial_${mesaUUID}`)) || [
 const contenedor = document.getElementById("contenedor-historial");
 
 historial.forEach(pedido => {
-  // Mostrar la fecha y hora del pedido
   const fechaPedido = new Date(pedido.fechaHora);
 
   const divFecha = document.createElement("div");
