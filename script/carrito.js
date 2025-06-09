@@ -1,5 +1,6 @@
 let mesaUUID = sessionStorage.getItem("mesaUUID");
 
+//Obtiene el numero de mesa
 function obtenerNumeroMesa(mesaUUID){
   fetch(`https://bugbustersspring.onrender.com/api/sesiones/${mesaUUID}/numero-mesa`)
   .then(res=> res.json())
@@ -9,6 +10,7 @@ function obtenerNumeroMesa(mesaUUID){
   })
 }
 
+//Actualizaciones de los pedidos
 function enviarActualizacionAlBackend(productoId, cantidad) {
   const pedidoId = localStorage.getItem(`pedido_mesa_${mesaUUID}`);
   if (!pedidoId) return;
@@ -28,6 +30,7 @@ function enviarActualizacionAlBackend(productoId, cantidad) {
 
 const contenedor = document.getElementById("carrito-contenedor");
 
+//Actualiza el contador del carrito dinamicamente
 function actualizarContadorCarrito() {
   const carrito = obtenerCarrito();
   const total = carrito.reduce((sum, item) => sum + item.cantidad, 0);
@@ -37,6 +40,7 @@ function actualizarContadorCarrito() {
   }
 }
 
+//Actualiza el precio total del pedido dinamicamente
 function actualizarPrecioTotal() {
   const carrito = obtenerCarrito();
   const total = carrito.reduce((sum, item) => sum + item.precio * item.cantidad, 0);
@@ -46,14 +50,17 @@ function actualizarPrecioTotal() {
   }
 }
 
+//Obtiene el carrito filtrando por uuid
 function obtenerCarrito() {
   return JSON.parse(localStorage.getItem(`carrito_${mesaUUID}`)) || [];
 }
 
+//Guarda el carrito en cada transaccion
 function guardarCarrito(carrito) {
   localStorage.setItem(`carrito_${mesaUUID}`, JSON.stringify(carrito));
 }
 
+//Añade al carrito
 function añadirAlCarrito(producto) {
   const carrito = obtenerCarrito();
   const existente = carrito.find(item => item.id === producto.id);
@@ -73,6 +80,7 @@ function añadirAlCarrito(producto) {
   enviarActualizacionAlBackend(producto.id, nuevaCantidad);
 }
 
+//Elimina del carrito
 function eliminarDelCarrito(producto) {
   const carrito = obtenerCarrito();
   const index = carrito.findIndex(item => item.id === producto.id);
@@ -91,6 +99,7 @@ function eliminarDelCarrito(producto) {
   }
 }
 
+//Elabora el pedido y lo manda a la base de datos
 document.getElementById("confirmar-compra").addEventListener("click", () => {
   const carrito = obtenerCarrito();
   if (carrito.length === 0) {
@@ -137,6 +146,7 @@ document.getElementById("confirmar-compra").addEventListener("click", () => {
   });
 });
 
+//Carga los platos desde el carrito al cargar la pagina
 const carrito = obtenerCarrito();
 carrito.forEach(producto => {
   const divPlato = document.createElement("div");

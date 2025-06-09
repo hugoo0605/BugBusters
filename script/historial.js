@@ -1,3 +1,4 @@
+//Obtiene el numero de la mesa
 function obtenerNumeroMesa(mesaUUID){
   fetch(`https://bugbustersspring.onrender.com/api/sesiones/${mesaUUID}/numero-mesa`)
   .then(res=> res.json())
@@ -7,6 +8,7 @@ function obtenerNumeroMesa(mesaUUID){
   })
 }
 
+//Actualiza el contador del carrito
 function actualizarContadorCarrito() {
   const mesaUUID = sessionStorage.getItem("mesaUUID");
   const carrito = JSON.parse(localStorage.getItem(`carrito_${mesaUUID}`)) || [];
@@ -17,6 +19,7 @@ function actualizarContadorCarrito() {
   }
 }
 
+//Carga los pedidos del historial desde el localstorage
 document.addEventListener("DOMContentLoaded", () => {
     actualizarContadorCarrito();
     obtenerNumeroMesa(mesaUUID);

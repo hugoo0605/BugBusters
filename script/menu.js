@@ -1,5 +1,6 @@
 let mesaUUID = obtenerMesaDesdeURLoSession();
 
+//Obtiene el uuid de la mesa
 function obtenerMesaDesdeURLoSession() {
   const params = new URLSearchParams(window.location.search);
   const mesaUUIDEnURL = params.get('mesa');
@@ -12,6 +13,7 @@ function obtenerMesaDesdeURLoSession() {
   return sessionStorage.getItem('mesaUUID');
 }
 
+//Busca el numero de mesa por uuid
 function obtenerNumeroMesa(mesaUUID){
   fetch(`https://bugbustersspring.onrender.com/api/sesiones/${mesaUUID}/numero-mesa`)
   .then(res=> res.json())
@@ -21,7 +23,7 @@ function obtenerNumeroMesa(mesaUUID){
   })
 }
 
-
+//Actualiza la interfaz para ver el carrito modificado
 function actualizarUIConCarrito(carrito) {
   carrito.forEach(item => {
     const platoDiv = document.querySelector(`.plato[data-producto-id="${item.id}"]`);
@@ -34,6 +36,7 @@ function actualizarUIConCarrito(carrito) {
   });
 }
 
+//Actualiza la interfaz por cada pedido
 function actualizarInterfazConPedido(pedido) {
   if (!pedido || !pedido.items) return;
 
@@ -48,16 +51,19 @@ function actualizarInterfazConPedido(pedido) {
   });
 }
 
+//Obtiene el carrito de localstorage
 function obtenerCarrito() {
   const mesaUUID = sessionStorage.getItem("mesaUUID");
   return JSON.parse(localStorage.getItem(`carrito_${mesaUUID}`)) || [];
 }
 
+//Guarda el carrito con cada transacción
 function guardarCarrito(carrito) {
   const mesaUUID = sessionStorage.getItem("mesaUUID");
   localStorage.setItem(`carrito_${mesaUUID}`, JSON.stringify(carrito));
 }
 
+//Actualizar contador dinamicamente
 function actualizarContadorCarrito() {
   const mesaUUID = sessionStorage.getItem("mesaUUID");
   const carrito = JSON.parse(localStorage.getItem(`carrito_${mesaUUID}`)) || [];
@@ -68,6 +74,7 @@ function actualizarContadorCarrito() {
   }
 }
 
+//Añade productos al carrito
 function añadirAlCarrito(producto) {
   const carrito = obtenerCarrito();
   const existente = carrito.find(item => item.id === producto.id);
@@ -80,6 +87,7 @@ function añadirAlCarrito(producto) {
   actualizarContadorCarrito();
 }
 
+//Elimina productos del carrito
 function eliminarDelCarrito(producto) {
   const carrito = obtenerCarrito();
   const index = carrito.findIndex(item => item.id === producto.id);
@@ -93,6 +101,7 @@ function eliminarDelCarrito(producto) {
   }
 }
 
+//Muestra los productos filtrados por categoria
 function mostrarProductos(categoriaSeleccionada = "TODOS") {
   fetch("https://bugbustersspring.onrender.com/api/productos")
     .then(res => res.json())
@@ -165,6 +174,7 @@ function mostrarProductos(categoriaSeleccionada = "TODOS") {
     });
 }
 
+//Muestra la descripcion del plato pinchando en el div
 const modal = document.getElementById('modal');
 const modalImg = document.getElementById('modal-img');
 const modalName = document.getElementById('modal-name');
@@ -180,6 +190,7 @@ modal.addEventListener('click', (e) => {
   }
 });
 
+//Busca las categorias en la bd
 fetch("https://bugbustersspring.onrender.com/api/productos/categorias")
   .then(res => res.json())
   .then(categorias => {
@@ -207,6 +218,7 @@ fetch("https://bugbustersspring.onrender.com/api/productos/categorias")
     });
   });
 
+//Acciones del websocket al cargar la pagina
 document.addEventListener("DOMContentLoaded", () => {
   mesaUUID = obtenerMesaDesdeURLoSession();
   mostrarProductos("TODOS");
@@ -245,6 +257,7 @@ window.addEventListener("pageshow", (event) => {
   }
 });
 
+//Envia actualizacion al back para mantener control
 function enviarActualizacionAlBackend(productoId, cantidad, mesaUUID) {
   const pedidoId = localStorage.getItem(`pedido_mesa_${mesaUUID}`);
   if (!pedidoId) return;
