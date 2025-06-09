@@ -15,12 +15,23 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
 
+/**
+ * Actividad para generar una factura a partir del número de mesa.
+ */
 class GenerarCuentaActivity : AppCompatActivity() {
 
+    // Campo de texto para introducir el número de mesa
     private lateinit var inputMesaId: EditText
+
+    // Botón para generar la factura
     private lateinit var generarFacturaBtn: Button
+
+    // TextView para mostrar el resultado de la factura
     private lateinit var facturaResultado: TextView
 
+    /**
+     * Inicializa la actividad y sus componentes.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_generar_cuenta)
@@ -39,6 +50,11 @@ class GenerarCuentaActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Llama a la API para generar la factura de la mesa indicada.
+     *
+     * @param numeroMesa Número de la mesa a facturar.
+     */
     private fun generarFacturaParaMesa(numeroMesa: Int) {
         lifecycleScope.launch {
             try {
@@ -65,6 +81,11 @@ class GenerarCuentaActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Muestra la factura generada en pantalla.
+     *
+     * @param factura Factura recibida de la API.
+     */
     @SuppressLint("SetTextI18n")
     private fun mostrarFactura(factura: FacturaDTO) {
         val pedidosStr = factura.pedidoIds.joinToString(", ")

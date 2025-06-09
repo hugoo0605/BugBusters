@@ -1,4 +1,3 @@
-// src/main/java/com/bugbusters/staff/activities/MenuInicial.kt
 package com.bugbusters.staff.activities
 
 import android.content.Intent
@@ -8,8 +7,17 @@ import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import com.bugbusters.staff.R
 
+/**
+ * Activity que muestra el menú principal tras iniciar sesión.
+ * Permite acceder a diferentes funcionalidades como pedidos activos, generación de QR,
+ * gestión de cuentas, facturas pendientes y cerrar sesión.
+ */
 class MenuInicial : AppCompatActivity() {
 
+    /**
+     * Método del ciclo de vida onCreate.
+     * Inicializa los botones y configura sus listeners para navegar entre actividades.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_menu_inicial)

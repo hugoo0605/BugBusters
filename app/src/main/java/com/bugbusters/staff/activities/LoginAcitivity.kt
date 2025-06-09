@@ -16,16 +16,27 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+/**
+ * Activity que gestiona la pantalla de login de la aplicación.
+ * Permite al usuario iniciar sesión, recordar sesión y navegar al registro.
+ */
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
     private lateinit var authApi: AuthApi
     private lateinit var rememberMeCheckBox: CheckBox
 
-    //Boolean para el ojo de la contraseña
+    /**
+     * Booleano que indica si la contraseña está visible u oculta.
+     */
     private var isPasswordVisible = false
 
 
+    /**
+     * Método del ciclo de vida de la Activity.
+     * Comprueba si existe sesión guardada y redirige directamente al menú principal si es así.
+     * Si no, inicializa la UI y configura Retrofit.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val prefs = getSharedPreferences("bugbusters_prefs", MODE_PRIVATE)
@@ -54,6 +65,12 @@ class LoginActivity : AppCompatActivity() {
         setupUI()
     }
 
+    /**
+     * Configura los listeners de la interfaz, incluyendo:
+     * - Botón de login para validar campos y ejecutar login.
+     * - Icono para mostrar/ocultar contraseña.
+     * - Texto para navegar a la pantalla de registro.
+     */
     private fun setupUI() {
         binding.loginButton.setOnClickListener {
             val email = binding.emailEditText.text.toString().trim()
@@ -90,6 +107,13 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Ejecuta la llamada a la API para autenticar al usuario con email y contraseña.
+     * Si el login es exitoso, guarda la sesión si está seleccionado y navega al menú inicial.
+     *
+     * @param email Correo electrónico introducido por el usuario.
+     * @param password Contraseña introducida por el usuario.
+     */
     private fun login(email: String, password: String) {
         val loginRequest = LoginRequest(email, password)
 
@@ -128,6 +152,9 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
 
+            /**
+             * Muestra un mensaje de error en caso de fallo de conexión o error en la llamada a la API.
+             */
             override fun onFailure(call: Call<TrabajadorDTO>, t: Throwable) {
                 Toast.makeText(
                     this@LoginActivity,

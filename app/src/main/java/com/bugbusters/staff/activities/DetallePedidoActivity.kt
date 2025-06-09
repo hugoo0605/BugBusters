@@ -15,6 +15,11 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+/**
+ * Actividad que muestra los detalles de un pedido.
+ * Permite visualizar los productos, actualizar sus estados
+ * y finalizar o cancelar el pedido.
+ */
 class DetallePedidoActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetallePedidoBinding
@@ -22,6 +27,10 @@ class DetallePedidoActivity : AppCompatActivity() {
     private lateinit var adapter: ItemPedidoAdapter
     private var pedidoId: Long = -1L
 
+    /**
+     * Método onCreate de la actividad.
+     * Inicializa la vista y carga los productos del pedido recibido por intent.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetallePedidoBinding.inflate(layoutInflater)
@@ -36,7 +45,6 @@ class DetallePedidoActivity : AppCompatActivity() {
         }
 
         val retrofit = Retrofit.Builder()
-            //.baseUrl("http://10.0.2.2:8080/api/")
             .baseUrl("https://bugbustersspring.onrender.com/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -46,6 +54,11 @@ class DetallePedidoActivity : AppCompatActivity() {
         cargarItemsDelPedido(pedidoId)
     }
 
+    /**
+     * Obtiene los productos del pedido desde el backend y los carga en la lista.
+     *
+     * @param pedidoId ID del pedido a consultar.
+     */
     private fun cargarItemsDelPedido(pedidoId: Long) {
         binding.progressBarDetalle.visibility = View.VISIBLE
 
@@ -82,6 +95,10 @@ class DetallePedidoActivity : AppCompatActivity() {
         })
     }
 
+    /**
+     * Configura los listeners de los botones para actualizar productos,
+     * finalizar el pedido o cancelarlo.
+     */
     private fun setupBotones() {
         binding.btnFinalizarTodos.setOnClickListener {
             adapter.marcarTodosComoFinalizado()
@@ -118,7 +135,6 @@ class DetallePedidoActivity : AppCompatActivity() {
                         }
                     })
 
-                // Solo se finaliza el pedido si el estado de los productos es ENTREGADO o CANCELADO
                 if (item.estado != "ENTREGADO" && item.estado != "CANCELADO") {
                     entregable = false
                 }

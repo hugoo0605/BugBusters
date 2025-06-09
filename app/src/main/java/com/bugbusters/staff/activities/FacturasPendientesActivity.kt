@@ -16,12 +16,23 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
 
+/**
+ * Actividad que muestra las facturas pendientes de pago.
+ */
 class FacturasPendientesActivity : AppCompatActivity() {
 
+    // RecyclerView de facturas
     private lateinit var rvFacturas: RecyclerView
+
+    // Vista que se muestra cuando no hay facturas
     private lateinit var tvSinFacturas: View
+
+    // Adaptador de facturas
     private lateinit var adapter: FacturaAdapter
 
+    /**
+     * Inicializa la actividad y sus componentes.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_facturas_pendientes)
@@ -38,6 +49,9 @@ class FacturasPendientesActivity : AppCompatActivity() {
         cargarFacturasPendientes()
     }
 
+    /**
+     * Carga las facturas pendientes desde la API.
+     */
     private fun cargarFacturasPendientes() {
         lifecycleScope.launch {
             try {
@@ -84,13 +98,16 @@ class FacturasPendientesActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Marca una factura como pagada previa confirmación.
+     *
+     * @param factura Factura a marcar como pagada.
+     */
     private fun marcarFacturaPagada(factura: FacturaDTO) {
-        // Mostrar diálogo de confirmación
         val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
             .setTitle("Confirmar pago")
             .setMessage("¿Estás seguro de que quieres marcar la factura ${factura.id} como pagada?")
             .setPositiveButton("Sí") { _, _ ->
-                // Si el usuario confirma, se marca como pagada
                 lifecycleScope.launch {
                     try {
                         val response = RetrofitInstance.facturaApi.pagarFactura(factura.id)

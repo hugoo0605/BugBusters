@@ -32,33 +32,55 @@ import java.io.File
 import java.io.FileOutputStream
 import java.util.UUID
 
+/**
+ * Actividad encargada de gestionar la creación, eliminación y visualización de QR para las mesas.
+ */
 class GenerarQRActivity : AppCompatActivity() {
 
+    // ImageView para mostrar el QR generado
     private lateinit var qrImageView: ImageView
+
+    // RecyclerView que contiene las mesas
     private lateinit var rvMesas: RecyclerView
+
+    // Botón para guardar el QR como PDF
     private lateinit var btnGuardarPdf: Button
 
+    // Bitmap del QR generado
     private var qrBitmap: Bitmap? = null
+
+    // UUID de la sesión de la mesa seleccionada
     private var sesionUUID: UUID? = null
+
+    // ID de la mesa seleccionada
     private var mesaSeleccionadaId: Long? = null
+
+    // Bandera para saber si está activado el modo eliminar mesa
     private var isDeleteMode = false
 
+    /**
+     * Método llamado al crear la actividad.
+     * Inicializa vistas y configura los listeners.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_generar_qr)
 
+        // Inicialización de vistas
         qrImageView = findViewById(R.id.qrImageView)
         rvMesas = findViewById(R.id.recyclerMesas)
         val fabAgregarMesa: View = findViewById(R.id.fabAgregarMesa)
         val fabEliminarMesa: FloatingActionButton = findViewById(R.id.fabEliminarMesa)
         btnGuardarPdf = findViewById(R.id.btnGuardarPdf)
 
+        // Ocultar botón de guardar PDF hasta que se genere un QR
         btnGuardarPdf.visibility = View.GONE
 
-        // Configuramos el RecyclerView
+        // Configuración de RecyclerView
         rvMesas.layoutManager = LinearLayoutManager(this)
         lateinit var adapter: MesaAdapter
 
+        // Inicialización de adaptador
         adapter = MesaAdapter(
             onMesaClick = { mesaId ->
                 if (!isDeleteMode) {
@@ -74,19 +96,26 @@ class GenerarQRActivity : AppCompatActivity() {
         rvMesas.adapter = adapter
         cargarMesas(adapter)
 
+        // Listener para añadir mesa
         fabAgregarMesa.setOnClickListener {
             crearNuevaMesa(adapter)
         }
+
+        // Listener para activar modo eliminar mesa
         fabEliminarMesa.setOnClickListener {
             isDeleteMode = !isDeleteMode
             adapter.setDeleteMode(isDeleteMode)
-            // Cambiar color del FAB para feedback visual
             fabEliminarMesa.backgroundTintList = ColorStateList.valueOf(
                 if (isDeleteMode) Color.RED else ContextCompat.getColor(this, R.color.purple_500)
             )
-            Toast.makeText(this, if (isDeleteMode) "Modo borrar mesa activado" else "Modo borrar mesa desactivado", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this,
+                if (isDeleteMode) "Modo borrar mesa activado" else "Modo borrar mesa desactivado",
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
+        // Listener para guardar QR como PDF
         btnGuardarPdf.setOnClickListener {
             sesionUUID?.let { uuid ->
                 downloadQRasPdf(uuid)
@@ -94,6 +123,9 @@ class GenerarQRActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Elimina una mesa del servidor y recarga el listado.
+     */
     private fun eliminarMesa(mesaId: Long, adapter: MesaAdapter) {
         lifecycleScope.launch {
             try {
@@ -116,6 +148,9 @@ class GenerarQRActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Carga las mesas desde el servidor y actualiza el RecyclerView.
+     */
     private fun cargarMesas(adapter: MesaAdapter) {
         lifecycleScope.launch {
             try {
@@ -132,6 +167,9 @@ class GenerarQRActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Muestra un diálogo para crear una nueva mesa.
+     */
     @SuppressLint("MissingInflatedId")
     private fun crearNuevaMesa(adapter: MesaAdapter) {
         val dialogView = layoutInflater.inflate(R.layout.dialog_nueva_mesa, null)
@@ -173,6 +211,9 @@ class GenerarQRActivity : AppCompatActivity() {
             .show()
     }
 
+    /**
+     * Obtiene el ID de sesión asociado a una mesa y genera su QR.
+     */
     private fun obtenerIdSesionYGenerarQR(mesaId: Long) {
         lifecycleScope.launch {
             try {
@@ -183,7 +224,7 @@ class GenerarQRActivity : AppCompatActivity() {
                         val primeraSesion = sesiones[0]
                         sesionUUID = primeraSesion.id
 
-                        val urlParaQR = "https://bugbusters-0jjv.onrender.com?mesa=${sesionUUID}"
+                        val urlParaQR = "https://bugbusters-0jjv.onrender.com?mesa=$sesionUUID"
                         generateQR(urlParaQR)?.let { bitmap ->
                             qrBitmap = bitmap
                             mostrarQRPopup(bitmap)
@@ -201,6 +242,9 @@ class GenerarQRActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Genera un Bitmap QR a partir de un texto.
+     */
     private fun generateQR(text: String): Bitmap? {
         return try {
             val bitMatrix = QRCodeWriter().encode(text, BarcodeFormat.QR_CODE, 512, 512)
@@ -217,6 +261,9 @@ class GenerarQRActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Muestra un popup con el QR generado.
+     */
     private fun mostrarQRPopup(qrBitmap: Bitmap) {
         val dialogView = layoutInflater.inflate(R.layout.dialog_qr_popup, null)
         val imageView = dialogView.findViewById<ImageView>(R.id.ivQRPopup)
@@ -238,6 +285,9 @@ class GenerarQRActivity : AppCompatActivity() {
         dialog.show()
     }
 
+    /**
+     * Descarga el QR generado como un archivo PDF.
+     */
     private fun downloadQRasPdf(uuid: UUID) {
         qrBitmap?.let { bitmap ->
             val width = 600
@@ -278,7 +328,6 @@ class GenerarQRActivity : AppCompatActivity() {
             canvas.drawText(web, (width - webWidth) / 2f, 540f, paint)
 
             document.finishPage(page)
-
             val fileName = "qr_mesa_${uuid}.pdf"
             val file = File(getExternalFilesDir(null), fileName)
 

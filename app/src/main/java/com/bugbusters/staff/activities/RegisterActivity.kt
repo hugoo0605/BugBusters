@@ -10,10 +10,18 @@ import okhttp3.ResponseBody
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
 
+/**
+ * Activity que gestiona el registro de nuevos usuarios.
+ * Permite al usuario ingresar datos para crear una cuenta y realiza la llamada al API para registrar.
+ */
 class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
     private lateinit var authApi: AuthApi
 
+    /**
+     * Método del ciclo de vida onCreate.
+     * Inicializa la vista, configura Retrofit y establece el listener para el botón de registro.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
@@ -48,6 +56,10 @@ class RegisterActivity : AppCompatActivity() {
             )
 
             authApi.register(body).enqueue(object : Callback<ResponseBody> {
+                /**
+                 * Callback para respuesta exitosa o error HTTP.
+                 * Muestra mensaje correspondiente y redirige a Login en caso de éxito.
+                 */
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                     if (response.isSuccessful) {
                         Toast.makeText(this@RegisterActivity, "Registro exitoso. Inicia sesión.", Toast.LENGTH_LONG).show()
@@ -58,6 +70,10 @@ class RegisterActivity : AppCompatActivity() {
                     }
                 }
 
+                /**
+                 * Callback para fallo en la conexión o error de red.
+                 * Muestra mensaje de error con la causa.
+                 */
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                     Toast.makeText(this@RegisterActivity, "Fallo: ${t.message}", Toast.LENGTH_LONG).show()
                 }

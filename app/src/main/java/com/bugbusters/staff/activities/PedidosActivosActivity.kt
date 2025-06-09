@@ -19,17 +19,25 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+/**
+ * Activity que muestra la lista de pedidos activos.
+ * Refresca automáticamente la lista cada segundo para mostrar los pedidos más recientes.
+ */
 class PedidosActivosActivity : AppCompatActivity() {
 
     private lateinit var listView: ListView
     private lateinit var progressBar: ProgressBar
     private lateinit var api: PedidoApi
 
-    //Refresca la pagina cada x tiempo
+    // Handler para refrescar la lista periódicamente
     private val refreshHandler = Handler(Looper.getMainLooper())
     private lateinit var refreshRunnable: Runnable
     private val refreshInterval: Long = 1000
 
+    /**
+     * Método del ciclo de vida onCreate.
+     * Inicializa la vista, configura Retrofit y comienza la carga de pedidos activos.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pedidos_activos)
@@ -56,6 +64,11 @@ class PedidosActivosActivity : AppCompatActivity() {
 
     private var esPrimeraCarga = true
 
+    /**
+     * Método que realiza la llamada API para obtener la lista de pedidos activos.
+     * Muestra un ProgressBar solo en la primera carga.
+     * Actualiza el ListView con los pedidos obtenidos y configura el click en cada pedido para ver detalles.
+     */
     private fun cargarPedidosActivos() {
         if (esPrimeraCarga) {
             progressBar.visibility = View.VISIBLE
@@ -108,22 +121,30 @@ class PedidosActivosActivity : AppCompatActivity() {
         })
     }
 
-
+    /**
+     * Método del ciclo de vida onResume.
+     * Inicia el refresco automático de la lista cuando la actividad está visible.
+     */
     override fun onResume() {
         super.onResume()
-        // Inicia el refresco automático cuando se muestra la pantalla
         refreshHandler.postDelayed(refreshRunnable, refreshInterval)
     }
 
+    /**
+     * Método del ciclo de vida onPause.
+     * Detiene el refresco automático cuando la actividad deja de estar visible.
+     */
     override fun onPause() {
         super.onPause()
-        // Detiene el refresco automático cuando se oculta la pantalla
         refreshHandler.removeCallbacks(refreshRunnable)
     }
 
+    /**
+     * Método del ciclo de vida onDestroy.
+     * Elimina cualquier callback pendiente para evitar fugas de memoria.
+     */
     override fun onDestroy() {
         super.onDestroy()
-        // Por seguridad, quitamos cualquier callback pendiente al destruir
         refreshHandler.removeCallbacks(refreshRunnable)
     }
 }
