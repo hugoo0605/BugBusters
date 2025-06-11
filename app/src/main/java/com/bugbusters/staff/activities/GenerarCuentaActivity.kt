@@ -66,7 +66,7 @@ class GenerarCuentaActivity : AppCompatActivity() {
                         facturaResultado.text = "Factura vacía"
                     }
                 } else {
-                    facturaResultado.text = "Error del servidor: ${response.code()}"
+                    facturaResultado.text = "No hay pedidos entregados para la mesa " + numeroMesa
                 }
             } catch (e: IOException) {
                 facturaResultado.text = "Error de red: ${e.message}"
